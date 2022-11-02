@@ -1,15 +1,16 @@
 import requests
 from bs4 import BeautifulSoup
 
-URL = 'https://www.glassdoor.com/Search/results.htm'
-request = '?keyword='
-search_string = 'engineer'  # input('enter search word ')
-response = requests.get(URL + request + search_string)
-
+URL = 'https://finance.yahoo.com/quote/'
+request1 = '?p='
+request2 = '&.tsrc=fin-srch'
+search_string = 'AMD'  # input('enter search ticker ')
+response = requests.get(URL + search_string + request1 + search_string + request2)
+soup = BeautifulSoup(response.content, "html.parser")
 print(response)
 print(response.headers)
 # print(response.text)
-with open('/Users/stanislavnevyazhsky/My Drive/Data Science/Python/data mining/output.html', 'w') as output:
-    output.write(response.text)
+with open('/Users/stanislavnevyazhsky/My Drive/Data Science/Python/data mining/output1.html', 'w') as output:
+    output.write(soup.prettify())
 
 
