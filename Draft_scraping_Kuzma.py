@@ -15,6 +15,15 @@ def get_article_card(card):
                     "link": link_to_article}
     return article_card
 
+
+def get_list_of_article_cards_from_page(cards):
+    """Get list of article cards from a page"""
+    article_card_lst = []
+    for card in cards:  # Maybe to add filtering out duplicates by links
+        article_card = get_article_card(card)
+        article_card_lst.append(article)
+    return article_card_lst
+
 #URL = "https://finance.yahoo.com/news/"
 URL_template = "https://news.search.yahoo.com/search?p={}"
 URL = URL_template.format('bmw')
@@ -26,6 +35,7 @@ page = requests.get(URL)
 soup = BeautifulSoup(page.content, "html.parser")
 
 # Find all tags "div" with id="NewsArticle"
-cards = soup.find_all("div","NewsArticle")
+cards = soup.find_all("div","NewsArticle")  # Finds cards of articles on the page (10 per page)
+
 
 
