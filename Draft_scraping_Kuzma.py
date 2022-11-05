@@ -2,6 +2,9 @@ import requests
 from bs4 import BeautifulSoup
 import csv
 import os
+import tabulate
+from time import sleep
+from random import randint
 
 
 def get_article_card(card):
@@ -41,25 +44,28 @@ def get_news_yahoo_from_page(url):
     # Find all tags "div" with id="NewsArticle"
     cards = soup.find_all("div", "NewsArticle")  # Finds cards of articles on the page (10 per page)
     # Get list of article cards from a page
-    articles_cards = get_list_of_article_cards_from_page(cards)
+    articles_card_list = get_list_of_article_cards_from_page(cards)
     # Find URL to the next page
     url_next_page = soup.find('a', 'next').get('href')
-    return articles_cards, url_next_page
+    return articles_card_list, url_next_page
 
 
 def get_news_yahoo(query, number_of_pages):
     """
-    Saves the article cards from the yahoo news for the specified query
+    Prints the article cards from the yahoo news for the specified query to the screen
     :param query: name of company (string)
     :param number_of_pages: (int)
-    :return: saves list of article cards to csv file
+    :return: List of article cards
     """
     URL_TEMPLATE = "https://news.search.yahoo.com/search?p={}"
     url = URL_TEMPLATE.format(query)
-    for i in range(number_of_pages):
-        article_cards, url = get_news_yahoo_from_page(url)
-        dictionary_list_to_csv(article_cards, query + "_news.csv")  # save "article_cards" to csv
-    return article_cards
+    articles_card_list = []
+    for page_number in range(1, number_of_pages + 1):
+        print(f'page {page_number} in processing...')
+        sleep(randint(15, 30))  # wait for 15-30 seconds before the next response to yahoo
+        articles_card_list_from_page, url = get_news_yahoo_from_page(url)
+        articles_card_list += articles_card_list_from_page
+    return articles_card_list
 
 
 def dictionary_list_to_csv(dict_list, filename):
@@ -81,5 +87,16 @@ def dictionary_list_to_csv(dict_list, filename):
     return
 
 
-article_cards_list = get_news_yahoo("bmw", 1)
+def print_dictionary_list(dict_list):
+    """
+    Prints list of dictionaries to the screen
+    :param dict_list: e.g. [{"name": 'Alice', "age": 20}, {"name": 'Bob', "age": 21}]
+    """
+    header = dict_list[0].keys()
+    rows = [x.values() for x in dict_list]
+    print(tabulate.tabulate(rows, header))
+    return
 
+
+article_cards_list = get_news_yahoo("bmw", 2)
+print_dictionary_list(article_cards_list)
