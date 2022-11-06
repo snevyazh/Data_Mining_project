@@ -1,7 +1,7 @@
-
-
 import requests
 from bs4 import BeautifulSoup
+import html
+from datetime import datetime
 
 
 def url_retrieve(url):
@@ -39,7 +39,6 @@ def function_author(soup):
 
 def function_datetime(soup):
     """takes the date and time from the article based on soup object"""
-    from datetime import datetime
     date_time = soup.find_all(class_="caas-attr-meta-time")
     date_time_cleaned1 = str(date_time[0]).rstrip('</time>').lstrip('<time class="caas-attr-meta-time" datetime="')
     date_time_cleaned2 = date_time_cleaned1.split('Z">')[0]
@@ -49,7 +48,7 @@ def function_datetime(soup):
 
 
 def function_title(soup):
-    import html
+
     """takes the title of the news article based on soup aoject"""
     title_raw = soup.find_all(class_="caas-title-wrapper")
     # print(title_raw)
@@ -60,10 +59,17 @@ def function_title(soup):
     return title_clean
 
 
-def main():
-    url = 'https://finance.yahoo.com/news/top-analyst-reports-bristol-myers-164504521.html'
-    response = url_retrieve(url)
+def function_text(soup):
+    """takes the news text body from the article based on soup object"""
+    text_body_raw = soup.find_all(class_="caas-body")
+    text_body = text_body_raw[0].text.strip()
+    #print(text_body)
+    return text_body
 
+
+def news_renderer(url):
+    """takes the url as an input and renders the author, title, date/time and text"""
+    response = url_retrieve(url)
     soup = create_soup(response)
     author = function_author(soup)
     print(author)
@@ -71,6 +77,13 @@ def main():
     print(date_time)
     title = function_title(soup)
     print(title)
+    text_body = function_text(soup)
+    print(text_body)
+
+
+def main():
+    url = 'https://finance.yahoo.com/news/top-analyst-reports-bristol-myers-164504521.html'
+    news_renderer(url)
 
 
 if __name__ == "__main__":
