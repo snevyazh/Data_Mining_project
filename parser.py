@@ -24,9 +24,6 @@ def url_retrieve(url):
 def create_soup(response):
     """creates soup object from news page retrieved to response, and writes it to .html file on disk"""
     soup = BeautifulSoup(response.content, "html.parser")
-    with open('/Users/stanislavnevyazhsky/My Drive/Data Science/Python/data mining/output1.html', 'w') as output:
-        output.write(soup.prettify())
-    # print(soup.title)
     return soup
 
 
@@ -48,11 +45,10 @@ def function_datetime(soup):
 
 
 def function_title(soup):
-
     """takes the title of the news article based on soup aoject"""
     title_raw = soup.find_all(class_="caas-title-wrapper")
     # print(title_raw)
-    title = str(title_raw[0]).lstrip('<header class="caas-title-wrapper"><h1 data-test-locator="headline">')\
+    title = str(title_raw[0]).lstrip('<header class="caas-title-wrapper"><h1 data-test-locator="headline">') \
         .rstrip('</h1></header>')
     title_clean = html.unescape(title)
     # print(title_clean)
@@ -63,7 +59,7 @@ def function_text(soup):
     """takes the news text body from the article based on soup object"""
     text_body_raw = soup.find_all(class_="caas-body")
     text_body = text_body_raw[0].text.strip()
-    #print(text_body)
+    # print(text_body)
     return text_body
 
 
@@ -81,9 +77,25 @@ def news_renderer(url):
     print(text_body)
 
 
+def get_news_data(url):
+    """
+    Returns news_data from the url (news_page)
+    :param url: url of news page
+    :return: news_data (dict): {author, date_time, title, text_body}
+    """
+    response = url_retrieve(url)
+    soup = create_soup(response)
+    news_data = {
+        "author": function_author(soup),
+        "date_time": function_datetime(soup),
+        "title": function_title(soup),
+        "text_body": function_text(soup)
+    }
+    return news_data
+
+
 def main():
-    url = 'https://finance.yahoo.com/news/top-analyst-reports-bristol-myers-164504521.html'
-    news_renderer(url)
+    return
 
 
 if __name__ == "__main__":

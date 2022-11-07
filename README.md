@@ -1,4 +1,5 @@
 
+
 # Finance.yahoo.com webscrapper
 
 This is a code to scrap the news from finance.yahoo.com
@@ -11,7 +12,7 @@ Selenium package
 
 3) the news are filtered by &&&&&
 
-3) for every news article we gets author, date and news text
+4) for every news article we gets author, date and news text
 
 ## Authors
 
@@ -49,4 +50,8 @@ Takes two numbers and returns the sum.
 ## Appendix
 
 Any additional information goes here
+
+=======
+# Data_Mining_project
+the is for Data Mining Project 
 
