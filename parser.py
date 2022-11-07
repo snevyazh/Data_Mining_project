@@ -90,7 +90,7 @@ def get_news_data(url):
         "author": function_author(soup),
         "date_time": function_datetime(soup),
         "title": function_title(soup),
-        "text_body": function_text(soup)
+        "text_body": function_text(soup), "url": url
     }
     return news_data
 
