@@ -7,8 +7,8 @@ url_root_yahoo = 'https://finance.yahoo.com/news/'
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36'}
 
-browser = driver = webdriver.Chrome()
-browser.get(url_root_yahoo)
+driver = webdriver.Chrome()
+driver.get(url_root_yahoo)
 
 
 def scroll_to_bottom(driver):
@@ -39,4 +39,4 @@ with open('/Users/stanislavnevyazhsky/My Drive/Data Science/Python/data mining/o
     output.write(text)
 
 
-browser.close()
+driver.close()
