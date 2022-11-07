@@ -24,9 +24,6 @@ def url_retrieve(url):
 def create_soup(response):
     """creates soup object from news page retrieved to response, and writes it to .html file on disk"""
     soup = BeautifulSoup(response.content, "html.parser")
-    # with open('/Users/stanislavnevyazhsky/My Drive/Data Science/Python/data mining/output1.html', 'w') as output:
-    #     output.write(soup.prettify())
-    # print(soup.title)
     return soup
 
 
@@ -99,9 +96,7 @@ def get_news_data(url):
 
 
 def main():
-    url = 'https://finance.yahoo.com/news/top-analyst-reports-bristol-myers-164504521.html'
-    #news_renderer(url)
-    print(get_news_data(url))
+    return
 
 
 if __name__ == "__main__":

@@ -40,11 +40,11 @@ def get_html_page(query):
     """
     url_root_yahoo = get_url(query)
 
-    browser = driver = webdriver.Chrome()
-    browser.get(url_root_yahoo)
+    driver = webdriver.Chrome()
+    driver.get(url_root_yahoo)
     scroll_to_bottom(driver)
     text = driver.page_source
-    browser.close()
+    driver.close()
     return text
 
 
