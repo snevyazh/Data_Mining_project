@@ -45,11 +45,10 @@ def function_datetime(soup):
 
 
 def function_title(soup):
-
     """takes the title of the news article based on soup aoject"""
     title_raw = soup.find_all(class_="caas-title-wrapper")
     # print(title_raw)
-    title = str(title_raw[0]).lstrip('<header class="caas-title-wrapper"><h1 data-test-locator="headline">')\
+    title = str(title_raw[0]).lstrip('<header class="caas-title-wrapper"><h1 data-test-locator="headline">') \
         .rstrip('</h1></header>')
     title_clean = html.unescape(title)
     # print(title_clean)
@@ -60,7 +59,7 @@ def function_text(soup):
     """takes the news text body from the article based on soup object"""
     text_body_raw = soup.find_all(class_="caas-body")
     text_body = text_body_raw[0].text.strip()
-    #print(text_body)
+    # print(text_body)
     return text_body
 
 
