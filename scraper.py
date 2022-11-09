@@ -49,7 +49,7 @@ def main():
         if not news_data:
             print(f"News were not found for {ticker_name}. Check ticker name.")
             continue
-        print(ticker_name)
+        print(f"Searching news for {ticker_name}...")
         print_dictionary_list(news_data)
     return
 
