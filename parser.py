@@ -14,10 +14,10 @@ def url_retrieve(url):
     if response.status_code != 200:
         raise Exception("not retrieved ")
 
-    if response.status_code == "200":
-        print("URL retrieved GOOD")
-    else:
-        print(response.status_code)
+    # if response.status_code == "200":
+    #     print("URL retrieved GOOD")
+    # else:
+    #     print(response.status_code)
     return response
 
 
@@ -63,18 +63,18 @@ def function_text(soup):
     return text_body
 
 
-def news_renderer(url):
-    """takes the url as an input and renders the author, title, date/time and text"""
-    response = url_retrieve(url)
-    soup = create_soup(response)
-    author = function_author(soup)
-    print(author)
-    date_time = function_datetime(soup)
-    print(date_time)
-    title = function_title(soup)
-    print(title)
-    text_body = function_text(soup)
-    print(text_body)
+# def news_renderer(url):
+#     """takes the url as an input and renders the author, title, date/time and text"""
+#     response = url_retrieve(url)
+#     soup = create_soup(response)
+#     author = function_author(soup)
+#     print(author)
+#     date_time = function_datetime(soup)
+#     print(date_time)
+#     title = function_title(soup)
+#     print(title)
+#     text_body = function_text(soup)
+#     print(text_body)
 
 
 def get_news_data(url):
