@@ -3,19 +3,21 @@
 
 This is a code to scrap the news from finance.yahoo.com
 
-1) it first opens the page and scraps all the news articles
+1) the program starts with scraper.py
 
-2) the finance.yahoo.com has no paginator, but loads new content once the 
+2) it first opens the page and scraps all the news articles
+
+3) the finance.yahoo.com has no paginator, but loads new content once the 
 user is reaching the edge. So, the scrapper emulates this behaviour with
 Selenium package
 
-3) user inputs the ticker symbol (or list of tickers). The program returns 
+4) user inputs the ticker symbol (or list of tickers). The program returns 
 the number of articles per ticker defined by user input, and prints them as a table
 
-4) In the table for every news article we gets author, date and news text. Prints URLs 
+5) In the table for every news article we gets author, date and news text. Prints URLs 
 for every article. 
 
-5) In the future we plan to add API to enrich ticker data with finance info
+6) In the future we plan to add API to enrich ticker data with finance info
 about the company the ticker represents.
 
 
