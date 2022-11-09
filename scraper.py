@@ -15,10 +15,11 @@ def print_dictionary_list(dict_list):
     return
 
 
-def scraper_by_ticker_from_yahoo(ticker):
+def scraper_by_ticker_from_yahoo(ticker, maxCards):
     """
     Scrapes news from finance.yahoo.com for company
-    :param query: (str) ticker of company. e.g. "BMW.DE"
+    :param ticker: (str) ticker of company. e.g. "BMW.DE"
+    :param maxCards: (int) maximum number of cards
     :return: prints the scraped data news. False if news were not found
     """
     html_page = lister.get_html_page(ticker)
@@ -27,12 +28,11 @@ def scraper_by_ticker_from_yahoo(ticker):
         return False
 
     i = 1  # i for test
-    imax = 5  # prints imax results
     news_data_lst = []
     for url in url_lst:
-        print(f"process page #{i} out of {imax}")
+        print(f"process page #{i} out of {maxCards}")
         news_data_lst.append(parser.get_news_data(url))
-        if i > imax - 1:
+        if i > maxCards - 1:
             break
         i += 1
     return news_data_lst
@@ -40,10 +40,10 @@ def scraper_by_ticker_from_yahoo(ticker):
 
 def main():
     """Calls Scraper(query) and prints the result"""
-    #ticker_name_lst = ['ORCL','BMW.DE', 'CRM', 'MSFT', 'MNDY', 'META', 'AAPL', 'TSLA']
-    ticker_name_lst = ['ORCX', 'ORCL']
+    ticker_name_lst = ['ORCL','BMW.DE', 'CRM', 'MSFT', 'ORCX', 'MNDY', 'META', 'AAPL', 'TSLA', 'GTR', 'HJY']
+    #ticker_name_lst = ['ORCX', 'ORCL']
     for ticker_name in ticker_name_lst:
-        news_data = scraper_by_ticker_from_yahoo(ticker_name)
+        news_data = scraper_by_ticker_from_yahoo(ticker_name, 50)
         if not news_data:
             print(f"News were not found for {ticker_name}. Check ticker name.")
             continue
