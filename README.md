@@ -10,9 +10,10 @@ user is reaching the edge. So, the scrapper emulates this behaviour with
 Selenium package
 
 3) user inputs the ticker symbol (or list of tickers). The program returns 
-50 articles per ticker and prints them as a table
+the number of articles per ticker defined by user input, and prints them as a table
 
-4) In the table for every news article we gets author, date and news text
+4) In the table for every news article we gets author, date and news text. Prints URLs 
+for every article. 
 
 5) In the future we plan to add API to enrich ticker data with finance info
 about the company the ticker represents.
