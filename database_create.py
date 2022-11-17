@@ -48,10 +48,11 @@ def create_database():
 def get_ticker_id(ticker):
     """gets from DB the ticker ID based on given ticker and returns the ticker ID"""
     run_sql("""use yahoo;""")
-    result = run_sql(f"select * from ticker where ticker.ticker_name = {ticker};")
-    return result
+    result = run_sql(f"select ID from ticker where ticker_name = '{ticker}';")
+    return result[0][0]
 
 
-create_database()
+# create_database()
 
+print(get_ticker_id('ABC'))
 
