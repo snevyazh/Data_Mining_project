@@ -35,14 +35,10 @@ def create_database():
         author VARCHAR(45) NULL,
         news_date DATETIME NULL,
         news_text MEDIUMTEXT NULL,
-        url VARCHAR(45) NULL,
-        ticker_id INT not null,
-        
-        FOREIGN KEY (ticker_id)
-            REFERENCES ticker(ID)
-            ON UPDATE CASCADE ON DELETE RESTRICT
+        url VARCHAR(45) NULL
         )
         ;""")
+    run_sql(""" """)
 
 
 def get_ticker_id(ticker):
