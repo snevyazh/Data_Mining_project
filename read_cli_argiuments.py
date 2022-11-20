@@ -18,7 +18,16 @@ def get_command_line_params():
     if args.u:
         print("no URLs to news will be shown, to show run command with -u before all the parameters")
     # print([not args.u, args.username, args.password, args.number_of_news, args.ticker])
-    return [not args.u, args.username, args.password, args.number_of_news, args.ticker]
+
+    input_parameters = {
+        "url_output": not args.u,
+        "username": args.username,
+        "password": args.password,
+        "number_of_news": args.number_of_news,
+        "ticker": args.ticker
+    }
+    return input_parameters
+    #return [not args.u, args.username, args.password, args.number_of_news, args.ticker]
 
 
-get_command_line_params()
+#get_command_line_params()
