@@ -29,16 +29,26 @@ def create_database():
               ticker_name VARCHAR(45) NULL)
                 ;""")
     run_sql("""CREATE TABLE IF NOT EXISTS news 
-        (
-        ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-        title VARCHAR(45) NULL,
-        author VARCHAR(45) NULL,
-        news_date DATETIME NULL,
-        news_text MEDIUMTEXT NULL,
-        url VARCHAR(45) NULL
-        )
-        ;""")
-    run_sql(""" """)
+            (
+            ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            title VARCHAR(45) NULL,
+            author VARCHAR(45) NULL,
+            news_date DATETIME NULL,
+            news_text MEDIUMTEXT NULL,
+            url VARCHAR(45) NULL
+            )
+            ;""")
+    run_sql("""CREATE TABLE IF NOT EXISTS news_ticker (
+              ID INT NOT NULL AUTO_INCREMENT
+              PRIMARY KEY,
+              news_id INT,
+              ticker_id INT,
+                FOREIGN KEY(news_id) 
+                REFERENCES yahoo.news (ID),
+                FOREIGN KEY(ticker_id)
+                REFERENCES yahoo.ticker (ID)
+            )
+            ; """)
 
 
 def get_ticker_id(ticker):
@@ -60,8 +70,7 @@ def check_duplicate(url, ticker):
 
 
 
-# create_database()
+create_database()
 
-print(get_ticker_id('ABC'))
-print(check_duplicate('www.yahoo.com', 'ABC'))
+
 
