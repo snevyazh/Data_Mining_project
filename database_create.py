@@ -1,5 +1,5 @@
-from datetime import datetime
 import pymysql
+import sys
 
 USER = 'root'
 PASSWORD = 'barmaglot'
@@ -24,25 +24,31 @@ def create_database():
 
     run_sql("""create database if not exists yahoo;""")
     run_sql("""use yahoo;""")
-    run_sql("""CREATE TABLE IF NOT EXISTS yahoo.ticker (
+    run_sql("""CREATE TABLE IF NOT EXISTS tickers (
               ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
               ticker_name VARCHAR(45) NULL)
                 ;""")
     run_sql("""CREATE TABLE IF NOT EXISTS news 
-        (
-        ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-        title VARCHAR(45) NULL,
-        author VARCHAR(45) NULL,
-        news_date DATETIME NULL,
-        news_text MEDIUMTEXT NULL,
-        url VARCHAR(45) NULL,
-        ticker_id INT not null,
-        
-        FOREIGN KEY (ticker_id)
-            REFERENCES ticker(ID)
-            ON UPDATE CASCADE ON DELETE RESTRICT
-        )
-        ;""")
+            (
+            ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            title VARCHAR(255) NULL,
+            author VARCHAR(255) NULL,
+            news_date DATETIME NULL,
+            news_text MEDIUMTEXT NULL,
+            url VARCHAR(500) NULL
+            )
+            ;""")
+    run_sql("""CREATE TABLE IF NOT EXISTS news_ticker (
+              ID INT NOT NULL AUTO_INCREMENT
+              PRIMARY KEY,
+              news_id INT,
+              ticker_id INT,
+                FOREIGN KEY(news_id) 
+                REFERENCES yahoo.news (ID),
+                FOREIGN KEY(ticker_id)
+                REFERENCES yahoo.ticker (ID)
+            )
+            ; """)
 
 
 def get_ticker_id(ticker):
@@ -56,7 +62,8 @@ def check_duplicate(url, ticker):
     """checks if the news is in the DB already with the assumption that we can have same URL with news,
     but for different ticker"""
     run_sql("""use yahoo;""")
-    if run_sql(f"select ID from news where ticker_id = (select ID from ticker where ticker_name = '{ticker}') "
+    if run_sql(f"select ID from news join news_ticker on news.ID = news_ticker.ID "
+               f"where ticker_id = (select ID from ticker where ticker_name = '{ticker}') "
                f"and url = '{url}';"):
         return True
     else:
@@ -64,8 +71,7 @@ def check_duplicate(url, ticker):
 
 
 
-# create_database()
+create_database()
+check_duplicate()
 
-print(get_ticker_id('ABC'))
-print(check_duplicate('www.yahoo.com', 'ABC'))
 
