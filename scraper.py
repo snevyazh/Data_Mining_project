@@ -40,21 +40,21 @@ def scraper_by_ticker_from_yahoo(ticker, max_cards):
     return news_data_lst
 
 
-def main():
-    """Calls Scraper(query) and prints the result"""
-    # ticker_name_lst = ['ORCL','BMW.DE', 'CRM', 'MSFT', 'ORCX', 'MNDY', 'META', 'AAPL', 'TSLA', 'GTR', 'HJY']
-    # ticker_name_lst = ['ORCX', 'ORCL']
-    ticker_name_lst = input("Enter tickers in a row ").split()
-    max_cards = int(input("Enter maximal news cards number "))
-    for ticker_name in ticker_name_lst:
-        news_data = scraper_by_ticker_from_yahoo(ticker_name, max_cards)
-        if not news_data:
-            print(f"News were not found for {ticker_name}. Check ticker name.")
-            continue
-        print(f"Searching news for {ticker_name}...")
-        print_dictionary_list(news_data)
-    return
-
-
-if __name__ == "__main__":
-    main()
+# def main():
+#     """Calls Scraper(query) and prints the result"""
+#     # ticker_name_lst = ['ORCL','BMW.DE', 'CRM', 'MSFT', 'ORCX', 'MNDY', 'META', 'AAPL', 'TSLA', 'GTR', 'HJY']
+#     # ticker_name_lst = ['ORCX', 'ORCL']
+#     ticker_name_lst = input("Enter tickers in a row ").split()
+#     max_cards = int(input("Enter maximal news cards number "))
+#     for ticker_name in ticker_name_lst:
+#         news_data = scraper_by_ticker_from_yahoo(ticker_name, max_cards)
+#         if not news_data:
+#             print(f"News were not found for {ticker_name}. Check ticker name.")
+#             continue
+#         print(f"Searching news for {ticker_name}...")
+#         print_dictionary_list(news_data)
+#     return
+#
+#
+# if __name__ == "__main__":
+#     main()
