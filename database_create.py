@@ -31,11 +31,11 @@ def create_database():
     run_sql("""CREATE TABLE IF NOT EXISTS news 
             (
             ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-            title VARCHAR(45) NULL,
-            author VARCHAR(45) NULL,
+            title VARCHAR(255) NULL,
+            author VARCHAR(255) NULL,
             news_date DATETIME NULL,
             news_text MEDIUMTEXT NULL,
-            url VARCHAR(45) NULL
+            url VARCHAR(500) NULL
             )
             ;""")
     run_sql("""CREATE TABLE IF NOT EXISTS news_ticker (
