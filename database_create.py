@@ -1,5 +1,5 @@
-from datetime import datetime
 import pymysql
+import sys
 
 USER = 'root'
 PASSWORD = 'barmaglot'
