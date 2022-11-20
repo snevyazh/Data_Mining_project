@@ -62,7 +62,8 @@ def check_duplicate(url, ticker):
     """checks if the news is in the DB already with the assumption that we can have same URL with news,
     but for different ticker"""
     run_sql("""use yahoo;""")
-    if run_sql(f"select ID from news where ticker_id = (select ID from ticker where ticker_name = '{ticker}') "
+    if run_sql(f"select ID from news join news_ticker on news.ID = news_ticker.ID "
+               f"where ticker_id = (select ID from ticker where ticker_name = '{ticker}') "
                f"and url = '{url}';"):
         return True
     else:
@@ -71,6 +72,6 @@ def check_duplicate(url, ticker):
 
 
 create_database()
-
+check_duplicate()
 
 
