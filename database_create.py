@@ -24,7 +24,7 @@ def create_database():
 
     run_sql("""create database if not exists yahoo;""")
     run_sql("""use yahoo;""")
-    run_sql("""CREATE TABLE IF NOT EXISTS yahoo.ticker (
+    run_sql("""CREATE TABLE IF NOT EXISTS tickers (
               ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
               ticker_name VARCHAR(45) NULL)
                 ;""")
