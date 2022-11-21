@@ -8,6 +8,7 @@ def print_dictionary_list(dict_list):
     """
     Prints list of dictionaries to the screen
     :param dict_list: e.g. [{"name": 'Alice', "age": 20}, {"name": 'Bob', "age": 21}]
+    UPD !!!! not used in final implementation
     """
     header = dict_list[0].keys()
     rows = [x.values() for x in dict_list]
@@ -28,7 +29,7 @@ def scraper_by_ticker_from_yahoo(ticker, max_cards):
     if not url_lst:  # news were not found
         return False
 
-    i = 1  # i for test
+    i = 1  # news number
     news_data_lst = []
     for url in url_lst:
         print(f"process page #{i} out of {max_cards}")

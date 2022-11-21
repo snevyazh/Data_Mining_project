@@ -1,6 +1,7 @@
 import pymysql
 import scraper
 
+DATABASE_TO_USE = 'use yahoo;'
 
 def create_connection_to_mysql(user, password):
     """
@@ -81,7 +82,7 @@ def get_sql_query_to_insert_news(news_data_lst):
     :param news_data_lst: list of news cards (return from scraper.scraper_by_ticker_from_yahoo())
     :return: tuple of 5 SQL queries (str)
     """
-    sql_query1 = 'USE yahoo; '
+    sql_query1 = DATABASE_TO_USE
     sql_query2 = 'CREATE TEMPORARY TABLE temp_table LIKE news; '
     sql_query3 = 'INSERT INTO temp_table (title, author_id, news_date, news_text, url) VALUES'
     for news_data in news_data_lst:
@@ -114,7 +115,7 @@ def get_sql_query_to_insert_news_ticker(ticker_id, news_id_lst):
     :param news_id_lst: list of news id
     :return: tuple of 5 SQL queries (str)
     """
-    sql_query1 = 'USE yahoo; '
+    sql_query1 = DATABASE_TO_USE
     sql_query2 = 'CREATE TEMPORARY TABLE temp_table LIKE news_ticker; '
     sql_query3 = 'INSERT INTO temp_table (news_id, ticker_id) VALUES'
     for news_id in news_id_lst:
@@ -141,21 +142,21 @@ def get_sql_query_to_insert_news_ticker(ticker_id, news_id_lst):
 
 def get_ticker_id(connection, ticker):
     """gets from DB the ticker ID based on given ticker and returns the ticker ID"""
-    run_sql(connection, """use yahoo;""")
+    run_sql(connection, DATABASE_TO_USE)
     result = run_sql(connection, f"select ID from tickers where ticker_name = '{ticker}';", return_result=True)
     return result[0]['ID']
 
 
 def get_author_id(connection, author):
     """gets from DB the author ID based on given author name and returns the author ID"""
-    run_sql(connection, """use yahoo;""")
+    run_sql(connection, DATABASE_TO_USE)
     result = run_sql(connection, f"select ID from authors where name = '{author}';", return_result=True)
     return result[0]['ID']
 
 
 def get_news_id_lst(connection, news_data_lst):
     """gets from DB the news_ID based on given url and returns the ticker ID"""
-    run_sql(connection, """use yahoo;""")
+    run_sql(connection, DATABASE_TO_USE)
 
     news_id_lst = []
     for news_data in news_data_lst:
@@ -173,7 +174,7 @@ def record_to_database(connection, ticker, news_data_lst):
     :return:
     """
     # Choose to use the "yahoo" database
-    run_sql(connection, 'USE yahoo;')
+    run_sql(connection, DATABASE_TO_USE)
 
     # Insert the scraped values into the database (checks duplicate)
     # SQL query for the insert into TABLE tickers
@@ -215,7 +216,7 @@ def create_database(connection):
     """creates the database with desired tables to store news"""
 
     run_sql(connection, """CREATE DATABASE IF NOT EXISTS yahoo;""")
-    run_sql(connection, """USE yahoo;""")
+    run_sql(connection, DATABASE_TO_USE)
     # Creates TABLE ticker
     run_sql(connection, """CREATE TABLE IF NOT EXISTS tickers (
           ID INT NOT NULL AUTO_INCREMENT,
