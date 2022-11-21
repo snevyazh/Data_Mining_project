@@ -21,6 +21,7 @@ def scraper_by_ticker_from_yahoo(ticker, max_cards):
     :param ticker: (str) ticker of company. e.g. "BMW.DE"
     :param max_cards: (int) maximum number of cards
     :return: prints the scraped data news. False if news were not found
+    TODO returns list: in format
     """
     html_page = lister.get_html_page(ticker)
     url_lst = url_from_html_page.get_url_lst_from_html_page(html_page)
