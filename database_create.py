@@ -1,5 +1,4 @@
 import pymysql
-import sys
 
 USER = 'root'
 PASSWORD = 'barmaglot'
@@ -25,28 +24,39 @@ def create_database():
     run_sql("""create database if not exists yahoo;""")
     run_sql("""use yahoo;""")
     run_sql("""CREATE TABLE IF NOT EXISTS tickers (
-              ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-              ticker_name VARCHAR(45) NULL)
-                ;""")
-    run_sql("""CREATE TABLE IF NOT EXISTS news 
-            (
-            ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-            title VARCHAR(255) NULL,
-            author VARCHAR(255) NULL,
-            news_date DATETIME NULL,
-            news_text MEDIUMTEXT NULL,
-            url VARCHAR(500) NULL
+          ID INT NOT NULL AUTO_INCREMENT,
+          ticker_name VARCHAR(45) NULL DEFAULT NULL,
+          company_name VARCHAR(100),
+          PRIMARY KEY (ID))
+            ;""")
+    run_sql("""CREATE TABLE IF NOT EXISTS authors (
+          ID INT NOT NULL AUTO_INCREMENT,
+          name VARCHAR(100),
+          PRIMARY KEY (ID)
+          )
+            ;""")
+
+    run_sql("""CREATE TABLE IF NOT EXISTS news (
+          ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+          title VARCHAR(255) NULL DEFAULT NULL,
+          author_id INT NULL DEFAULT NULL,
+          news_date DATETIME NULL DEFAULT NULL,
+          news_text MEDIUMTEXT NULL DEFAULT NULL,
+          url VARCHAR(500) NULL DEFAULT NULL,
+            FOREIGN KEY (author_id)
+            REFERENCES authors (ID)
             )
             ;""")
+
     run_sql("""CREATE TABLE IF NOT EXISTS news_ticker (
-              ID INT NOT NULL AUTO_INCREMENT
-              PRIMARY KEY,
-              news_id INT,
-              ticker_id INT,
-                FOREIGN KEY(news_id) 
-                REFERENCES yahoo.news (ID),
-                FOREIGN KEY(ticker_id)
-                REFERENCES yahoo.ticker (ID)
+          ID INT NOT NULL AUTO_INCREMENT
+          PRIMARY KEY,
+          news_id INT,
+          ticker_id INT,
+            FOREIGN KEY(news_id) 
+            REFERENCES yahoo.news (ID),
+            FOREIGN KEY(ticker_id)
+            REFERENCES yahoo.tickers (ID)
             )
             ; """)
 
@@ -70,8 +80,4 @@ def check_duplicate(url, ticker):
         return False
 
 
-
 create_database()
-check_duplicate()
-
-
