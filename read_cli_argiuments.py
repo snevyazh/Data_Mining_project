@@ -15,9 +15,6 @@ def get_command_line_params():
     args = parser.parse_args()
     if not str(args.number_of_news).isalpha:
         raise ValueError("The number of news articles to show entered in command line is not a number")
-    if args.u:
-        print("no URLs to news will be shown, to show run command with -u before all the parameters")
-    # print([not args.u, args.username, args.password, args.number_of_news, args.ticker])
 
     input_parameters = {
         "username": args.username,
