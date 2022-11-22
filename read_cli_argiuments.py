@@ -7,7 +7,7 @@ def get_command_line_params():
     Raises ValueError exception if number of news is not a number"""
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('-u', action='store_true', help="if selected URL won't be printed")
+    # parser.add_argument('-u', action='store_true', help="if selected URL won't be printed")
     parser.add_argument('username', type=str, help='username')
     parser.add_argument('password', type=str, help='password')
     parser.add_argument('number_of_news', type=int, help='how many news cards to export')
@@ -20,14 +20,13 @@ def get_command_line_params():
     # print([not args.u, args.username, args.password, args.number_of_news, args.ticker])
 
     input_parameters = {
-        "url_output": not args.u,
         "username": args.username,
         "password": args.password,
         "number_of_news": args.number_of_news,
         "ticker": args.ticker
     }
     return input_parameters
-    #return [not args.u, args.username, args.password, args.number_of_news, args.ticker]
 
 
-#get_command_line_params()
+
+

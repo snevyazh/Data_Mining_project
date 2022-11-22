@@ -39,3 +39,58 @@ DB_CREATE_TABLE_NEWS_TICKERS = """CREATE TABLE IF NOT EXISTS news_ticker (
             )
             ; """
 
+DB_FIND_TICKER_URL = """select ID from news where ticker_id = (select ID from ticker where ticker_name = {ticker}) "
+               "and url = {url};"""
+
+
+
+DB_INSERT_TICKER = """INSERT INTO tickers (ticker_name) SELECT * FROM (SELECT '{ticker}' AS ticker_name) AS temp 
+            WHERE NOT EXISTS (SELECT ticker_name FROM tickers WHERE ticker_name = '{ticker}') LIMIT 1;"""
+
+DB_INSERT_AUTHORS = """INSERT INTO authors (name) SELECT * FROM (SELECT '{author}') AS temp WHERE NOT EXISTS 
+            (SELECT name FROM authors WHERE name = '{author}') LIMIT 1;"""
+
+CREATE_TEMP_TABLE_NEWS = 'CREATE TEMPORARY TABLE temp_table LIKE news;'
+
+DB_INSERT_NEWS = """
+                INSERT INTO news
+                (title, author_id, news_date, news_text, url)
+                SELECT
+                title, author_id, news_date, news_text, url
+                FROM temp_table
+                WHERE NOT EXISTS (
+                  SELECT *
+                  FROM news
+                  WHERE news.url = temp_table.url
+                );
+                """
+
+CREATE_TEMP_TABLE_TICKERS = 'CREATE TEMPORARY TABLE temp_table LIKE news_ticker; '
+
+DB_INSERT_NEWS_TICKER = """
+                INSERT INTO news_ticker
+                (news_id, ticker_id)
+                SELECT
+                news_id, ticker_id
+                FROM temp_table
+                WHERE NOT EXISTS (
+                  SELECT *
+                  FROM news_ticker
+                  WHERE news_ticker.ticker_id = temp_table.ticker_id
+                    AND news_ticker.news_id = temp_table.news_id
+                );
+                """
+
+DB_FIND_TICKER = "select ID from tickers where ticker_name = '{ticker}';"
+
+DB_FIND_AUTHOR = "select ID from authors where name = '{author}';"
+
+CHECK_DUPLICATE = "select ID from news where ticker_id = (select ID from ticker where ticker_name = {}) and url = {};"
+
+DROP_TEMP_TABLE = 'DROP TABLE temp_table;'
+
+SELECT_NEWS_DATA = "select ID from news where url = '{news_data}';"
+
+INSERT_TEMP_TABLE_NEWS = 'INSERT INTO temp_table (title, author_id, news_date, news_text, url) VALUES'
+
+INSERT_INTO_TEMP_TABLE_NEWS_TICKER = 'INSERT INTO temp_table (news_id, ticker_id) VALUES'
