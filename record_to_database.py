@@ -1,5 +1,5 @@
 import pymysql
-import scraper
+#import scraper
 from sql_queries import *
 
 
@@ -54,7 +54,7 @@ def get_sql_query_to_insert_ticker(ticker):
 def get_sql_query_to_insert_author(author):
     """
     Gets SQL query to insert author name to TABLE authors. Checks if author exists in the table already.
-    :param author name: (str) e.g. 'John Smith'
+    :param author_name: (str) e.g. 'John Smith'
     :return: SQL query (str)
     """
     sql_query_to_insert = DB_INSERT_AUTHORS.format(author=author)
