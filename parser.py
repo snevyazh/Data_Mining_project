@@ -32,12 +32,14 @@ def function_author(soup):
     author = soup.find_all(class_="caas-author-byline-collapse")
     # print(str(author[0]).rstrip('</span>').lstrip('<span class="caas-author-byline-collapse">'))
     return str(author[0]).rstrip('</span>').lstrip('<span class="caas-author-byline-collapse">')
+    # 0 is an index for web scrapping of author, will never change and is used only locally
 
 
 def function_datetime(soup):
     """takes the date and time from the article based on soup object"""
     date_time = soup.find_all(class_="caas-attr-meta-time")
     date_time_cleaned1 = str(date_time[0]).rstrip('</time>').lstrip('<time class="caas-attr-meta-time" datetime="')
+    # 0 is an index for web scrapping, will never change and is used only locally
     date_time_cleaned2 = date_time_cleaned1.split('Z">')[0]
     date_time_cleaned = datetime.strptime(date_time_cleaned2, '%Y-%m-%dT%H:%M:%S.%f')
     # print(str(author[0]).rstrip('</span>').lstrip('<span class="caas-author-byline-collapse">'))
@@ -50,6 +52,7 @@ def function_title(soup):
     # print(title_raw)
     title = str(title_raw[0]).lstrip('<header class="caas-title-wrapper"><h1 data-test-locator="headline">') \
         .rstrip('</h1></header>')
+    # 0 is an index for web scrapping, will never change and is used only locally
     title_clean = html.unescape(title)
     # print(title_clean)
     return title_clean
@@ -59,7 +62,7 @@ def function_text(soup):
     """takes the news text body from the article based on soup object"""
     text_body_raw = soup.find_all(class_="caas-body")
     text_body = text_body_raw[0].text.strip()
-    # print(text_body)
+    # 0 is an index for web scrapping, will never change and is used only locally
     return text_body
 
 

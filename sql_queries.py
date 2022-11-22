@@ -1,5 +1,6 @@
-USER = 'root'
-PASSWORD = 'barmaglot'
+# USER = 'root'
+# PASSWORD = 'barmaglot'
+
 DATABASE_TO_USE = 'use yahoo;'
 DB_CREATE = """create database if not exists yahoo;"""
 DB_CREATE_TABLE_TICKERS = """CREATE TABLE IF NOT EXISTS tickers (

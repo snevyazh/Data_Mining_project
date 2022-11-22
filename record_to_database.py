@@ -1,5 +1,5 @@
 import pymysql
-#import scraper
+# import scraper
 from sql_queries import *
 
 
@@ -107,6 +107,7 @@ def get_ticker_id(connection, ticker):
     run_sql(connection, DATABASE_TO_USE)
     result = run_sql(connection, DB_FIND_TICKER.format(ticker=ticker), return_result=True)
     return result[0]['ID']
+    # 0 is index for result list, used locally and will never change
 
 
 def get_author_id(connection, author):
@@ -114,6 +115,7 @@ def get_author_id(connection, author):
     run_sql(connection, DATABASE_TO_USE)
     result = run_sql(connection, DB_FIND_AUTHOR.format(author=author), return_result=True)
     return result[0]['ID']
+    # 0 is index for result list, used locally and will never change
 
 
 def get_news_id_lst(connection, news_data_lst):
@@ -124,6 +126,7 @@ def get_news_id_lst(connection, news_data_lst):
     for news_data in news_data_lst:
         result = run_sql(connection, SELECT_NEWS_DATA.format(news_data=news_data['url']), return_result=True)
         news_id_lst.append(result[0]['ID'])
+    # 0 is index for result list, used locally and will never change
     return news_id_lst
 
 
@@ -150,7 +153,6 @@ def record_to_database(connection, ticker, news_data_lst):
         run_sql(connection, sql_query)
         connection.commit()
 
-
     # get author_id by author name
     for i, value in enumerate([x["author"] for x in news_data_lst]):
         index = get_author_id(connection, value)
@@ -164,7 +166,6 @@ def record_to_database(connection, ticker, news_data_lst):
     # Sql query for the insert into TABLE news_ticker relation
     # Get ticker_id by ticker_name
     ticker_id = get_ticker_id(connection, ticker)
-
 
     # Get news_id by url
     news_id_lst = get_news_id_lst(connection, news_data_lst)
