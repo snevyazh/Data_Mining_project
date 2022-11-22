@@ -1,7 +1,7 @@
 import pymysql
 import scraper
+from sql_queries import *
 
-DATABASE_TO_USE = 'use yahoo;'
 
 def create_connection_to_mysql(user, password):
     """
@@ -35,8 +35,7 @@ def run_sql(connection, sql_command, return_result=False):
 def check_duplicate(url, ticker):
     """checks if the news is in the DB already with the assumption that we can have same URL with news,
     but for different ticker"""
-    if run_sql(f"select ID from news where ticker_id = (select ID from ticker where ticker_name = '{ticker}') "
-               f"and url = '{url}';"):
+    if run_sql(CHECK_DUPLICATE.format(ticker, url)):
         return True
     else:
         return False
@@ -48,31 +47,17 @@ def get_sql_query_to_insert_ticker(ticker):
     :param ticker: (str) e.g. 'BMW.DE'
     :return: SQL query (str)
     """
-    sql_query_to_insert = \
-        f"""
-        INSERT INTO tickers (ticker_name)
-        SELECT * FROM (SELECT '{ticker}' AS ticker_name) AS temp
-        WHERE NOT EXISTS (
-            SELECT ticker_name FROM tickers WHERE ticker_name = '{ticker}'
-        ) LIMIT 1;
-        """
+    sql_query_to_insert = DB_INSERT_TICKER.format(ticker=ticker)
     return sql_query_to_insert
 
 
 def get_sql_query_to_insert_author(author):
     """
-    Gets SQL query to insert authors's name to TABLE authors. Checks if author exists in the table already.
+    Gets SQL query to insert author name to TABLE authors. Checks if author exists in the table already.
     :param author name: (str) e.g. 'John Smith'
     :return: SQL query (str)
     """
-    sql_query_to_insert = \
-        f"""
-        INSERT INTO authors (name)
-        SELECT * FROM (SELECT '{author}') AS temp
-        WHERE NOT EXISTS (
-            SELECT name FROM authors WHERE name = '{author}'
-        ) LIMIT 1;
-        """
+    sql_query_to_insert = DB_INSERT_AUTHORS.format(author=author)
     return sql_query_to_insert
 
 
@@ -83,8 +68,8 @@ def get_sql_query_to_insert_news(news_data_lst):
     :return: tuple of 5 SQL queries (str)
     """
     sql_query1 = DATABASE_TO_USE
-    sql_query2 = 'CREATE TEMPORARY TABLE temp_table LIKE news; '
-    sql_query3 = 'INSERT INTO temp_table (title, author_id, news_date, news_text, url) VALUES'
+    sql_query2 = CREATE_TEMP_TABLE_NEWS
+    sql_query3 = INSERT_TEMP_TABLE_NEWS
     for news_data in news_data_lst:
         sql_query3 += ' ' \
                       + str((news_data["title"], news_data["author_id"],
@@ -92,19 +77,8 @@ def get_sql_query_to_insert_news(news_data_lst):
                              news_data["text_body"], news_data["url"])) + ','
     sql_query3 = sql_query3[:-1] + ';'
 
-    sql_query4 = """
-                INSERT INTO news
-                (title, author_id, news_date, news_text, url)
-                SELECT
-                title, author_id, news_date, news_text, url
-                FROM temp_table
-                WHERE NOT EXISTS (
-                  SELECT *
-                  FROM news
-                  WHERE news.url = temp_table.url
-                );
-                """
-    sql_query5 = 'DROP TABLE temp_table;'
+    sql_query4 = DB_INSERT_NEWS
+    sql_query5 = DROP_TEMP_TABLE
     return sql_query1, sql_query2, sql_query3, sql_query4, sql_query5
 
 
@@ -116,41 +90,29 @@ def get_sql_query_to_insert_news_ticker(ticker_id, news_id_lst):
     :return: tuple of 5 SQL queries (str)
     """
     sql_query1 = DATABASE_TO_USE
-    sql_query2 = 'CREATE TEMPORARY TABLE temp_table LIKE news_ticker; '
-    sql_query3 = 'INSERT INTO temp_table (news_id, ticker_id) VALUES'
+    sql_query2 = CREATE_TEMP_TABLE_TICKERS
+    sql_query3 = INSERT_INTO_TEMP_TABLE_NEWS_TICKER
     for news_id in news_id_lst:
         sql_query3 += ' ' \
                       + str((news_id, ticker_id)) + ','
     sql_query3 = sql_query3[:-1] + ';'
 
-    sql_query4 = """
-                INSERT INTO news_ticker
-                (news_id, ticker_id)
-                SELECT
-                news_id, ticker_id
-                FROM temp_table
-                WHERE NOT EXISTS (
-                  SELECT *
-                  FROM news_ticker
-                  WHERE news_ticker.ticker_id = temp_table.ticker_id
-                    AND news_ticker.news_id = temp_table.news_id
-                );
-                """
-    sql_query5 = 'DROP TABLE temp_table;'
+    sql_query4 = DB_INSERT_NEWS_TICKER
+    sql_query5 = DROP_TEMP_TABLE
     return sql_query1, sql_query2, sql_query3, sql_query4, sql_query5
 
 
 def get_ticker_id(connection, ticker):
     """gets from DB the ticker ID based on given ticker and returns the ticker ID"""
     run_sql(connection, DATABASE_TO_USE)
-    result = run_sql(connection, f"select ID from tickers where ticker_name = '{ticker}';", return_result=True)
+    result = run_sql(connection, DB_FIND_TICKER.format(ticker=ticker), return_result=True)
     return result[0]['ID']
 
 
 def get_author_id(connection, author):
     """gets from DB the author ID based on given author name and returns the author ID"""
     run_sql(connection, DATABASE_TO_USE)
-    result = run_sql(connection, f"select ID from authors where name = '{author}';", return_result=True)
+    result = run_sql(connection, DB_FIND_AUTHOR.format(author=author), return_result=True)
     return result[0]['ID']
 
 
@@ -160,7 +122,7 @@ def get_news_id_lst(connection, news_data_lst):
 
     news_id_lst = []
     for news_data in news_data_lst:
-        result = run_sql(connection, f"select ID from news where url = '{news_data['url']}';", return_result=True)
+        result = run_sql(connection, SELECT_NEWS_DATA.format(news_data=news_data['url']), return_result=True)
         news_id_lst.append(result[0]['ID'])
     return news_id_lst
 
@@ -215,46 +177,16 @@ def record_to_database(connection, ticker, news_data_lst):
 def create_database(connection):
     """creates the database with desired tables to store news"""
 
-    run_sql(connection, """CREATE DATABASE IF NOT EXISTS yahoo;""")
+    run_sql(connection, DB_CREATE)
     run_sql(connection, DATABASE_TO_USE)
     # Creates TABLE ticker
-    run_sql(connection, """CREATE TABLE IF NOT EXISTS tickers (
-          ID INT NOT NULL AUTO_INCREMENT,
-          ticker_name VARCHAR(45) NULL DEFAULT NULL,
-          company_name VARCHAR(100),
-          PRIMARY KEY (ID))
-            ;""")
+    run_sql(connection, DB_CREATE_TABLE_TICKERS)
 
-    run_sql(connection, """CREATE TABLE IF NOT EXISTS authors (
-          ID INT NOT NULL AUTO_INCREMENT,
-          name VARCHAR(100),
-          PRIMARY KEY (ID)
-          )
-            ;""")
+    run_sql(connection, DB_CREATE_TABLE_AUTHORS)
 
-    run_sql(connection, """CREATE TABLE IF NOT EXISTS news (
-          ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-          title VARCHAR(255) NULL DEFAULT NULL,
-          author_id INT NULL DEFAULT NULL,
-          news_date DATETIME NULL DEFAULT NULL,
-          news_text MEDIUMTEXT NULL DEFAULT NULL,
-          url VARCHAR(500) NULL DEFAULT NULL,
-            FOREIGN KEY (author_id)
-            REFERENCES authors (ID)
-            )
-            ;""")
+    run_sql(connection, DB_CREATE_TABLE_NEWS)
 
-    run_sql(connection, """CREATE TABLE IF NOT EXISTS news_ticker (
-          ID INT NOT NULL AUTO_INCREMENT
-          PRIMARY KEY,
-          news_id INT,
-          ticker_id INT,
-            FOREIGN KEY(news_id) 
-            REFERENCES yahoo.news (ID),
-            FOREIGN KEY(ticker_id)
-            REFERENCES yahoo.tickers (ID)
-            )
-            ; """)
+    run_sql(connection, DB_CREATE_TABLE_NEWS_TICKERS)
 
 # connection = create_connection_to_mysql(user='root', password='*******')
 # create_database(connection)
