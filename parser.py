@@ -97,9 +97,4 @@ def get_news_data(url):
     return news_data
 
 
-def main():
-    return
 
-
-if __name__ == "__main__":
-    main()
