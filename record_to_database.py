@@ -146,10 +146,12 @@ class DatabaseRecord:
         sql_query = self.__get_sql_query_to_insert_ticker(ticker)
         self.run_sql(sql_query)
         self.connection.commit()
-
+        print(news_data_lst)
         # SQL query for the insert into TABLE authors
         for author in [x["author"] for x in news_data_lst]:
+            print(author)
             sql_query = self.__get_sql_query_to_insert_author(author)
+            print(sql_query)
             self.run_sql(sql_query)
             self.connection.commit()
 
