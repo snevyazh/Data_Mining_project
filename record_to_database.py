@@ -6,12 +6,13 @@ class DatabaseRecord:
     """class for all SQL operations """
 
     def __init__(self, user, password, ticker):
-        self.connection = self.__create_connection_to_mysql(user, password)
+        """initialise clss with username, password and ticker"""
         self.user = user
         self.password = password
         self.ticker = ticker
+        self.connection = self.__create_connection_to_mysql()
 
-    def __create_connection_to_mysql(self, user, password):
+    def __create_connection_to_mysql(self):
         """
         Creates connection to MySQL database management system
         :param user: (str) user name
@@ -19,9 +20,9 @@ class DatabaseRecord:
         :return: <pymysql.connections.Connection object>
         """
         self.connection = pymysql.connect(host='localhost',
-                                     user=user,
-                                     password=password,
-                                     cursorclass=pymysql.cursors.DictCursor)
+                                          user=self.user,
+                                          password=self.password,
+                                          cursorclass=pymysql.cursors.DictCursor)
         return self.connection
 
     def run_sql(self, sql_command, return_result=False):
