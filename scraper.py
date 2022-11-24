@@ -3,12 +3,16 @@ import lister
 import parser
 import tabulate
 
-class scraper:
+
+class Scraper:
     def __init__(self, ticker, max_cards):
         self.ticker = ticker
         self.max_cards = max_cards
         self.news_data_lst = []
         pass
+
+    # def __getitem__(self, key):
+    #     return self.news_data_lst[key]
 
     def scraper_by_ticker_from_yahoo(self):
         """
@@ -47,10 +51,6 @@ class scraper:
         rows = [x.values() for x in dict_list]
         print(tabulate.tabulate(rows, header))
         pass
-
-
-
-
 
 # def main():
 #     """Calls Scraper(query) and prints the result"""
