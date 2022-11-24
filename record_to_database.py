@@ -114,14 +114,14 @@ class DatabaseRecord:
 
     def __get_author_id(self, author):
         """gets from DB the author ID based on given author name and returns the author ID"""
-        self.run_sql(self.connection, DATABASE_TO_USE)
+        self.run_sql(DATABASE_TO_USE)
         result = self.run_sql(DB_FIND_AUTHOR.format(author=author), return_result=True)
         return result[0]['ID']
         # 0 is index for result list, used locally and will never change
 
     def __get_news_id_lst(self, news_data_lst):
         """gets from DB the news_ID based on given url and returns the ticker ID"""
-        self.run_sql(self.connection, DATABASE_TO_USE)
+        self.run_sql(DATABASE_TO_USE)
 
         news_id_lst = []
         for news_data in news_data_lst:
@@ -146,12 +146,12 @@ class DatabaseRecord:
         sql_query = self.__get_sql_query_to_insert_ticker(ticker)
         self.run_sql(sql_query)
         self.connection.commit()
-        print(news_data_lst)
+        # print('news data list', news_data_lst)
         # SQL query for the insert into TABLE authors
         for author in [x["author"] for x in news_data_lst]:
-            print(author)
+            # print(author)
             sql_query = self.__get_sql_query_to_insert_author(author)
-            print(sql_query)
+            # print(sql_query)
             self.run_sql(sql_query)
             self.connection.commit()
 
