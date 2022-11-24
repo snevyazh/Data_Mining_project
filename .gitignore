@@ -1,0 +1,10 @@
+.DS_Store
+/backup
+output1.html
+output11111.html
+geckodriver.log
+test.py
+yahoo.mwb.bak
+yahoo.mwb.beforefix
+.*
+
