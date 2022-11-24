@@ -11,7 +11,6 @@ class DatabaseRecord:
         self.password = password
         self.ticker = ticker
 
-
     def __create_connection_to_mysql(self, user, password):
         """
         Creates connection to MySQL database management system
@@ -19,11 +18,11 @@ class DatabaseRecord:
         :param password: (str)
         :return: <pymysql.connections.Connection object>
         """
-        connection = pymysql.connect(host='localhost',
+        self.connection = pymysql.connect(host='localhost',
                                      user=user,
                                      password=password,
                                      cursorclass=pymysql.cursors.DictCursor)
-        return connection
+        return self.connection
 
     def run_sql(self, sql_command, return_result=False):
         """
