@@ -11,6 +11,7 @@ class DatabaseRecord:
         self.password = password
         self.ticker = ticker
         self.connection = self.__create_connection_to_mysql()
+        self.__create_database()
 
     def __create_connection_to_mysql(self):
         """
