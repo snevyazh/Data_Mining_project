@@ -24,7 +24,4 @@ def get_command_line_params():
         "ticker": args.ticker
     }
     return input_parameters
-    #return [not args.u, args.username, args.password, args.number_of_news, args.ticker]
 
-
-#get_command_line_params()

@@ -1,3 +1,5 @@
+# deprecated!
+
 from selenium import webdriver
 import time
 
@@ -47,10 +49,4 @@ def get_html_page(query):
     driver.close()
     return text
 
-#
-# def main():
-#     return
-#
-#
-# if __name__ == "__main__":
-#     main()
+
