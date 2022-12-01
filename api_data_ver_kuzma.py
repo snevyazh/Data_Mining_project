@@ -31,5 +31,6 @@ json_content = response.content
 dict_content = json.loads(json_content)
 
 time_lst = dict_content['chart']['result'][0]['timestamp']
+time_lst = pd.to_datetime(time_lst, unit='s')
 data_lst = dict_content['chart']['result'][0]['indicators']['quote'][0]
 df_table = pd.DataFrame(data=data_lst, index=time_lst)
