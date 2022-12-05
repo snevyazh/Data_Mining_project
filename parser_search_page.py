@@ -50,7 +50,6 @@ class ParserSearchPage:
         :return: text (str), content in tag <html></html>
         """
         url_root_yahoo = self._get_url()
-
         self._driver.get(url_root_yahoo)
         self._scroll_to_bottom()
         text = self._driver.page_source
