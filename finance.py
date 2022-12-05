@@ -1,5 +1,6 @@
 import yfinance as yf
-# import matplotlib
+
+""" this is only to check the data acquired through API, as this package is reliable"""
 
 content = yf.Ticker("AAPL")
 ticker_info=content.info
