@@ -40,6 +40,19 @@ DB_CREATE_TABLE_NEWS_TICKERS = """CREATE TABLE IF NOT EXISTS news_ticker (
             )
             ; """
 
+DB_CREATE_TABLE_PRICE = """
+        CREATE TABLE IF NOT EXISTS price
+        (
+          ID INT NOT NULL AUTO_INCREMENT,
+          close_price INT NULL,
+          price_date DATETIME NULL,
+          ticker_id VARCHAR(45) NULL,
+          PRIMARY KEY (ID),
+            FOREIGN KEY (ticker_id)
+            REFERENCES tickers(ID)
+        )
+        ;"""
+
 DB_FIND_TICKER_URL = """select ID from news where ticker_id = (select ID from ticker where ticker_name = {ticker}) "
                "and url = {url};"""
 
