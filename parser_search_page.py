@@ -18,7 +18,7 @@ class ParserSearchPage:
     def _get_url(self):
         """
         Gets url from query (ticker of company (str). e.g. "BMW.DE").
-        :no params on input, only self
+        :params: none, only self
         :return: full url of the search with ticker
         """
         return "https://finance.yahoo.com/quote/" + self.ticker + "/news?p=" + self.ticker
@@ -53,7 +53,7 @@ class ParserSearchPage:
     def _get_html_page(self):
         """
         Returns content of html page (search page for the ticker of company (str). e.g. "BMW.DE")
-        :no params on input, only self
+        :params: no, only self
         :return: text (str), content in tag <html></html>
         """
         url_root_yahoo = self._get_url()
@@ -65,8 +65,8 @@ class ParserSearchPage:
 
     def _get_url_from_tag_h3(self, tag_h3):
         """
-        Gets url from html tag h3.
-        :params:  h3 tag
+        Gets url from html tag h3
+        :param tag_h3:  h3 tag
         :return: full url to the news page
         """
         URL_PREFIX = "https://finance.yahoo.com"
@@ -75,8 +75,8 @@ class ParserSearchPage:
 
     def get_url_lst(self, tag_h3_lst):
         """
-        Returns list of urls in for of python list.
-        :params: list of h3 tages from the web page
+        Returns list of urls in for of python list
+        :param tag_h3_lst: list of h3 tags from the web page
         :return: list of urls
         """
         url_lst = []
@@ -88,7 +88,7 @@ class ParserSearchPage:
     def _get_tag_h3_lst_from_html_page(self):
         """
         Returns list h3 tags from html page, the list contains the h3 tags with url inside.
-        :params: only self
+        :param: only self
         :return: list of tags h3 with urls inside
         """
         # Parse HTML content of the page (URL)
@@ -101,7 +101,7 @@ class ParserSearchPage:
         """
         Accumulates the functions to get final url lists, calls functions to get list of h3 tags with
         urls first, and then calls the function to create the list of urls.
-        :params: only self
+        :param: only self
         :return: final list of urls
         """
         # Get list tags <h3 id='Mb(5px)'></h3>

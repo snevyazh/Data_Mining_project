@@ -16,8 +16,7 @@ class Scraper:
     def scraper_by_ticker_from_yahoo(self):
         """
         Scrapes news from finance.yahoo.com for company
-        :param ticker: (str) ticker of company. e.g. "BMW.DE"
-        :param max_cards: (int) maximum number of cards
+        :param: none, uses self only
         :return: prints the scraped data news. False if news were not found
         TODO returns list: in format
         """

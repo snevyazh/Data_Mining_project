@@ -5,7 +5,7 @@ def get_command_line_params():
     """Reads the command line interface and returns the CLI arguments: print with URL (default yes),
     username , password, number of news to show and ticker symbol.
     Raises ValueError exception if number of news is not a number
-    :params: none
+    :param: none
     :return: list of input parameters in form of a list
         """
     parser = argparse.ArgumentParser()
