@@ -6,7 +6,10 @@ class DatabaseRecord:
     """class for all SQL operations """
 
     def __init__(self, user, password, ticker):
-        """initialise clss with username, password and ticker"""
+        """initialise clss with username, password and ticker
+            :params: database user, his password and ticker, that was selected to scrape for news
+            :return: none. Only initialise the class with input parameters
+        """
         self.user = user
         self.password = password
         self.ticker = ticker
@@ -41,8 +44,12 @@ class DatabaseRecord:
         return
 
     def check_duplicate(self, url, ticker):
-        """checks if the news is in the DB already with the assumption that we can have same URL with news,
-        but for different ticker"""
+        """Checks if the news is in the DB already with the assumption that we can have same URL with news,
+        but for different ticker
+        :param ticker: (str) e.g. 'BMW.DE' to check for duplicate
+        :param url: url to the news for this ticker to check
+        :return: True is duplicate found and False if not
+        """
         if self.run_sql(CHECK_DUPLICATE.format(ticker, url)):
             return True
         else:

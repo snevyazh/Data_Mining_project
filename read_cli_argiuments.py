@@ -2,9 +2,12 @@ import argparse
 
 
 def get_command_line_params():
-    """reads the command line interface and returns the CLI arguments: print with URL (default yes),
+    """Reads the command line interface and returns the CLI arguments: print with URL (default yes),
     username , password, number of news to show and ticker symbol.
-    Raises ValueError exception if number of news is not a number"""
+    Raises ValueError exception if number of news is not a number
+    :params: none
+    :return: list of input parameters in form of a list
+        """
     parser = argparse.ArgumentParser()
     parser.add_argument('-u', action='store_true', help="if selected URL won't be printed")
     parser.add_argument('username', type=str, help='username')

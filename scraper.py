@@ -4,6 +4,9 @@ from parser_search_page import *
 
 class Scraper:
     def __init__(self, ticker, max_cards):
+        """Defines the class Scrapper
+        :param ticker: (str) ticker of company. e.g. "BMW.DE"
+        :param max_cards: (int) maximum number of cards"""
         self.ticker = ticker
         self.max_cards = max_cards
         self.news_data_lst = []
