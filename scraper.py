@@ -18,7 +18,6 @@ class Scraper:
         Scrapes news from finance.yahoo.com for company
         :param: none, uses self only
         :return: prints the scraped data news. False if news were not found
-        TODO returns list: in format
         """
         page = ParserSearchPage(self.ticker)
         url_lst = page.get_url_lst_from_html_page()
