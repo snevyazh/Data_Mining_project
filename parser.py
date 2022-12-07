@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import html
 from datetime import datetime
+from logger import logger
 
 
 class Parser:
@@ -18,19 +19,19 @@ class Parser:
         self.text = self.__function_text(self.soup)
 
     def __url_retrieve(self, url):
-        """creates the response from given URL of a news article and returns it"""
-
+        """
+        creates the response from given URL of a news article and returns it
+        :param url: (str) url for request
+        :return: response class
+        """
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
                           'Chrome/102.0.0.0 Safari/537.36'}
         response = requests.get(url, headers=headers)  # + search_string + request1 + search_string + request2
         if response.status_code != 200:
+            logger.error("Response from {} is not correct: {}.".format(url, response.status_code))
             raise Exception("not retrieved ")
-
-        # if response.status_code == "200":
-        #     print("URL retrieved GOOD")
-        # else:
-        #     print(response.status_code)
+        logger.debug("Response from {} is obtained correctly.".format(url))
         return response
 
     def __create_soup(self, response):
@@ -44,7 +45,6 @@ class Parser:
         # print(str(author[0]).rstrip('</span>').lstrip('<span class="caas-author-byline-collapse">'))
         return str(author[0]).rstrip('</span>').lstrip('<span class="caas-author-byline-collapse">')
         # 0 is an index for web scrapping of author, will never change and is used only locally
-
 
     def __function_datetime(self, soup):
         """takes the date and time from the article based on soup object"""
@@ -88,4 +88,5 @@ class Parser:
             "title": self.__function_title(soup),
             "text_body": self.__function_text(soup), "url": url
         }
+        logger.debug("News data from {} is parsed".format(url))
         return news_data
