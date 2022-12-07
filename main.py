@@ -24,5 +24,6 @@ def main():
     # database.draw_graph(date_start=input_parameters['date_from'], date_end=input_parameters['date_to'] )
     # for future use!!
 
+
 if __name__ == "__main__":
     main()
