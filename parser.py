@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import html
 from datetime import datetime
+from logger import logger
 
 
 class Parser:
@@ -25,12 +26,9 @@ class Parser:
                           'Chrome/102.0.0.0 Safari/537.36'}
         response = requests.get(url, headers=headers)  # + search_string + request1 + search_string + request2
         if response.status_code != 200:
+            logger.error("Response from {} is not correct: {}.".format(url, response.status_code))
             raise Exception("not retrieved ")
-
-        # if response.status_code == "200":
-        #     print("URL retrieved GOOD")
-        # else:
-        #     print(response.status_code)
+        logger.debug("Response from {} is obtained correctly.".format(url))
         return response
 
     def __create_soup(self, response):
@@ -88,4 +86,5 @@ class Parser:
             "title": self.__function_title(soup),
             "text_body": self.__function_text(soup), "url": url
         }
+        logger.debug("News data from {} is parsed".format(url))
         return news_data

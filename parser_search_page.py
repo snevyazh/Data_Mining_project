@@ -1,6 +1,7 @@
 from selenium import webdriver
 from bs4 import BeautifulSoup
 import time
+from logger import logger
 
 
 class ParserSearchPage:
@@ -31,6 +32,8 @@ class ParserSearchPage:
              """
         old_position = 0
         new_position = None
+
+        logger.debug("Scrolling of the search page started.")
         while new_position != old_position:
             # Get old scroll position
             old_position = self._driver.execute_script(
@@ -48,6 +51,7 @@ class ParserSearchPage:
                 ("return (window.pageYOffset !== undefined) ?"
                  " window.pageYOffset : (document.documentElement ||"
                  " document.body.parentNode || document.body);"))
+        logger.debug("Scrolling of the search page finished.")
         return
 
     def _get_html_page(self):
@@ -108,4 +112,5 @@ class ParserSearchPage:
         tag_h3_lst = self._get_tag_h3_lst_from_html_page()
         # Get list of url to news
         url_lst = self.get_url_lst(tag_h3_lst)
+        logger.debug("URL list to the news is retrieved for {}.".format(self.ticker))
         return url_lst

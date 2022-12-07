@@ -17,6 +17,7 @@ class ExtractorApi:
         response = requests.get(url, headers=headers)  # + search_string + request1 + search_string + request2
         if response.status_code != 200:
             logger.error("Response from {} is not correct: {}.".format(url, response.status_code))
+            raise Exception("not retrieved ")
         logger.debug("Response from {} is obtained correctly.".format(url))
         return response
 

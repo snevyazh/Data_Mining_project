@@ -1,7 +1,7 @@
 import parser
 from parser_search_page import *
 from extractor_api import *
-
+from logger import logger
 
 class Scraper:
     def __init__(self, ticker, max_cards):
@@ -40,6 +40,7 @@ class Scraper:
         page = ParserSearchPage(self.ticker)
         url_lst = page.get_url_lst_from_html_page()
         if not url_lst:  # news were not found
+            logger.error("News for ticker {} are not found.".format(self.ticker))
             return False
 
         i = 1  # news number
@@ -50,4 +51,5 @@ class Scraper:
             if i > self.max_cards - 1:
                 break
             i += 1
+        logger.debug("Scraping of news for ticker {} is finished.".format(self.ticker))
         pass
