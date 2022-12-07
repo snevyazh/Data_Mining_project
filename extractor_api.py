@@ -2,10 +2,9 @@ import requests
 import json
 import pandas as pd
 import datetime
-import matplotlib.pyplot as plt
 
 
-class ExtractorApi():
+class ExtractorApi:
     def __init__(self):
         return
 
@@ -24,27 +23,31 @@ class ExtractorApi():
         #     print(response.status_code)
         return response
 
-    def get_price_data(self, ticker = "bmw.de", interval="1d", range="30d",
-                       period1=datetime.datetime(2022, 1, 1),
-                       period2=datetime.datetime(2022, 1, 7)):
-        """
-        Gets price data
+    def get_price_data(self, ticker, period1, period2=datetime.datetime.now()):
+        """"
+        Gets price data over the specified period with a resolution of 1 day
         :param ticker: (str) e.g. "bmw.de"
-        :param interval: (str) # 1m 2m 5m 15m 30m 60m 90m 1h 1d 5d 1wk 1mo 3mo
-        :param range: (str) e.g. "30d". Can be "max" or "previous"
         :param period1: (datetime.datetime) time to start at (can be overwritten by 'range')
-        :param period2: (datetime.datetime) time to end at
-        :return: DataFrame of prices over time
+        :param period2: (datetime.datetime) time to end at (the current day by default)
+        :return: DataFrame of prices over time, None if the query was not correct
         """
+        if not isinstance(period1, datetime.datetime):
+            print("The start date is not a datetime.datetime type")
+            return
+
+        if not isinstance(period2, datetime.datetime):
+            print("The end date is not a datetime.datetime type")
+            return
+
+        if (period2 - period1).total_seconds() < 0:
+            print("The start date is later than the end day!")
+            return
 
         period1 = str(int(period1.timestamp()))  # UNIX timestamp representation of the date you wish to start at
         period2 = str(int(period2.timestamp()))
 
-        url = "https://query1.finance.yahoo.com/v8/finance/chart/{}?&interval={}&range={}&period1={}&period2={}" \
-            .format(ticker, interval, range, period1, period2)
-
-        # url = "https://query1.finance.yahoo.com/v8/finance/chart/{}?&interval={}&range={}" \
-        #     .format(ticker, interval, range)
+        url = "https://query1.finance.yahoo.com/v8/finance/chart/{}?&interval=1d&period1={}&period2={}" \
+            .format(ticker, period1, period2)
 
         response = self.url_retrieve(url)
         json_content = response.content
@@ -57,13 +60,9 @@ class ExtractorApi():
         return df_table
 
 
-ticker = "bmw.de"
-interval = "1d"
-range = ""
-
-api_obj = ExtractorApi()
-df_table = api_obj.get_price_data(ticker=ticker,
-                                  interval=interval,
-                                  range=range,
-                                  period1=datetime.datetime(2022, 1, 1),
-                                  period2=datetime.datetime(2022, 1, 7))
+# ticker = "bmw.de"
+#
+# api_obj = ExtractorApi()
+# df_table = api_obj.get_price_data(ticker=ticker,
+#                                   period1=datetime.datetime(2022, 1, 1),
+#                                   period2=datetime.datetime(2022, 1, 7))
