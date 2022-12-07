@@ -42,5 +42,3 @@ def get_command_line_params():
                         "date_to": args.date_to[0]}
     logger.debug("User input is parsed {}".format(input_parameters))
     return input_parameters
-
-print(get_command_line_params())
