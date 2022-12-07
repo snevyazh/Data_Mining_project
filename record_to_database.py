@@ -1,6 +1,7 @@
 import pymysql
 from sql_queries import *
 import pandas as pd
+from sqlalchemy import create_engine
 
 
 class DatabaseRecord:
@@ -203,11 +204,13 @@ class DatabaseRecord:
         :param close_price: (int) the price for the date given
         :return: none
         """
-        self.run_sql(DATABASE_TO_USE)
+        db_data = 'mysql+pymysql://' + self.user + ':' + self.password + '@' + 'localhost/' + DATABASE
+        engine = create_engine(db_data)
+        # self.run_sql(DATABASE_TO_USE)
         ticker_id = self.__get_ticker_id(ticker)
-        df_to_sql = pd.DataFrame({'Date': price_table.index, 'close_price': price_table['close'],
+        df_to_sql = pd.DataFrame({'price_date': price_table.index, 'close_price': price_table['close'],
                                   'ticker_id': ticker_id})
-        df_to_sql.to_sql('price', con=self.connection, schema=DATABASE_TO_USE, if_exists='append')
+        df_to_sql.to_sql('price', con=engine, if_exists='append', index=False)
         # sql_query = self.__get_sql_query_to_insert_price(ticker_id, close_price, date)
         # self.run_sql(sql_query)
         # self.connection.commit()
