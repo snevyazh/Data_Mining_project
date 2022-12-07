@@ -46,7 +46,7 @@ DB_CREATE_TABLE_PRICE = """
           ID INT NOT NULL AUTO_INCREMENT,
           close_price INT NULL,
           price_date DATETIME NULL,
-          ticker_id VARCHAR(45) NULL,
+          ticker_id INT,
           PRIMARY KEY (ID),
             FOREIGN KEY (ticker_id)
             REFERENCES tickers(ID)

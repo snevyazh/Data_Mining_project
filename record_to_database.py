@@ -5,7 +5,7 @@ from sql_queries import *
 class DatabaseRecord:
     """class for all SQL operations """
 
-    def __init__(self, user, password, ticker):
+    def __init__(self, user, password, ticker, api=False, date_from=None, date_to=None):
         """initialise clss with username, password and ticker
             :params: database user, his password and ticker, that was selected to scrape for news
             :return: none. Only initialise the class with input parameters
@@ -15,6 +15,9 @@ class DatabaseRecord:
         self.ticker = ticker
         self.connection = self.__create_connection_to_mysql()
         self.__create_database()
+        self.date_to = date_to
+        self.date_from = date_from
+        self.api = api
 
     def __create_connection_to_mysql(self):
         """
@@ -111,21 +114,27 @@ class DatabaseRecord:
         return sql_query1, sql_query2, sql_query3, sql_query4, sql_query5
 
     def __get_ticker_id(self, ticker):
-        """gets from DB the ticker ID based on given ticker and returns the ticker ID"""
+        """gets from DB the ticker ID based on given ticker and returns the ticker ID
+        :param ticker: ticker entered by user
+        :return: ID of the ticker in the database"""
         self.run_sql(DATABASE_TO_USE)
         result = self.run_sql(DB_FIND_TICKER.format(ticker=ticker), return_result=True)
         return result[0]['ID']
         # 0 is index for result list, used locally and will never change
 
     def __get_author_id(self, author):
-        """gets from DB the author ID based on given author name and returns the author ID"""
+        """gets from DB the author ID based on given author name and returns the author ID
+        :param author: name of the author from news
+        :return: ID of the author from the database"""
         self.run_sql(DATABASE_TO_USE)
         result = self.run_sql(DB_FIND_AUTHOR.format(author=author), return_result=True)
         return result[0]['ID']
         # 0 is index for result list, used locally and will never change
 
     def __get_news_id_lst(self, news_data_lst):
-        """gets from DB the news_ID based on given url and returns the ticker ID"""
+        """gets from DB the news_ID based on given url and returns the ticker ID
+        :param news_data_lst: list of news cards (return from scraper.scraper_by_ticker_from_yahoo())
+        :return: list of IDs for news from database"""
         self.run_sql(DATABASE_TO_USE)
 
         news_id_lst = []
@@ -135,10 +144,20 @@ class DatabaseRecord:
         # 0 is index for result list, used locally and will never change
         return news_id_lst
 
+    def __get_sql_query_to_insert_price(self, ticker_id, close_price, date):
+        """
+        Gets SQL query to insert close_price to TABLE price.
+        :param ticker_id: (int) ticker ID from tickers
+        :param date: (datetime) date for price identification
+        :param close_price: (int) the price for the date given
+        :return: SQL query (str)
+        """
+        sql_query_to_insert = DB_INSERT_PRICE.format(price=close_price, date=date, ticker_id=ticker_id)
+        return sql_query_to_insert
+
     def record_to_database(self, ticker, news_data_lst):
         """
         Records the scraped news into the database "yahoo"
-        :param connection: <pymysql.connections.Connection object> connection to MySQL database management system
         :param ticker: ticker of company
         :param news_data_lst: list of news cards (return from scraper.scraper_by_ticker_from_yahoo())
         :return:
@@ -164,12 +183,28 @@ class DatabaseRecord:
         self.connection.commit()
         return
 
+    def record_price_to_database(self, ticker_id, close_price, date):
+        """
+        Records the queried prices from API into the database "yahoo"
+        :param ticker_id: (int) ticker ID from tickers
+        :param date: (datetime) date for price identification
+        :param close_price: (int) the price for the date given
+        :return: none
+        """
+        self.run_sql(DATABASE_TO_USE)
+        sql_query = self.__get_sql_query_to_insert_price(ticker_id, close_price, date)
+        self.run_sql(sql_query)
+        self.connection.commit()
+
     def __create_database(self):
-        """creates the database with desired tables to store news"""
+        """creates the database with desired tables to store news
+        :param: none
+        :return: none"""
         self.run_sql(DB_CREATE)
         self.run_sql(DATABASE_TO_USE)
         self.run_sql(DB_CREATE_TABLE_TICKERS)
         self.run_sql(DB_CREATE_TABLE_AUTHORS)
         self.run_sql(DB_CREATE_TABLE_NEWS)
         self.run_sql(DB_CREATE_TABLE_NEWS_TICKERS)
+        self.run_sql(DB_CREATE_TABLE_PRICE)
 

@@ -12,8 +12,10 @@ def main():
         """
     input_parameters = read_cli_argiuments.get_command_line_params()
     database = DatabaseRecord(user=input_parameters["username"], password=input_parameters["password"],
-                              ticker=input_parameters["ticker"])
+                              ticker=input_parameters["ticker"], date_from=input_parameters["date_from"],
+                              date_to=input_parameters['date_to'], api=input_parameters['api'])
     scrapper_object = Scraper(ticker=input_parameters["ticker"], max_cards=input_parameters["number_of_news"])
+    if input_parameters['api']:
 
     news_data_lst = scrapper_object.news_data_lst
     database.record_to_database(input_parameters["ticker"], news_data_lst)
