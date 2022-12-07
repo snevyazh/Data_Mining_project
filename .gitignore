@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+chromedriver
+yahoo.mwb
+=======
 **/.DS_Store
 /backup
 output1.html
@@ -8,3 +12,4 @@ yahoo.mwb.bak
 yahoo.mwb.beforefix
 
 
+>>>>>>> stan
