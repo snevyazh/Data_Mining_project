@@ -1,11 +1,12 @@
 import logging
 import sys
 
+LOGGER_NAME = "Logger for Scraper"
+LOGGER_FILE_NAME = "logs.log"
+
+
 def create_logger():
     """Creates a logger with settings"""
-    LOGGER_NAME = "Logger for Scraper"
-    LOGGER_FILE_NAME = "logs.log"
-
     logger = logging.getLogger(LOGGER_NAME)
     logger.setLevel(logging.DEBUG)
 
