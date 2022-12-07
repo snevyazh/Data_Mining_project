@@ -16,9 +16,9 @@ def get_command_line_params():
     parser.add_argument('password', type=str, help='password')
     parser.add_argument('number_of_news', type=int, help='how many news cards to export')
     parser.add_argument('ticker', type=str, help='what ticker you need')
-    parser.add_argument('date_from', type=lambda s: datetime.datetime.strptime(s, '%Y-%m-%d'),
+    parser.add_argument('-date_from', type=lambda s: datetime.datetime.strptime(s, '%Y-%m-%d'),
                         help='Date from which to parse, format year-month-day')
-    parser.add_argument('date_to', type=lambda s: datetime.datetime.strptime(s, '%Y-%m-%d'),
+    parser.add_argument('-date_to', type=lambda s: datetime.datetime.strptime(s, '%Y-%m-%d'),
                         help='Up to which date to parse, format year-month-day')
 
     args = parser.parse_args()
@@ -35,4 +35,3 @@ def get_command_line_params():
     }
     return input_parameters
 
-print(get_command_line_params())
