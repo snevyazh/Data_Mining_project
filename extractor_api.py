@@ -2,6 +2,7 @@ import requests
 import json
 import pandas as pd
 import datetime
+from logger import logger
 
 
 class ExtractorApi:
@@ -15,12 +16,8 @@ class ExtractorApi:
                           'Chrome/102.0.0.0 Safari/537.36'}
         response = requests.get(url, headers=headers)  # + search_string + request1 + search_string + request2
         if response.status_code != 200:
-            raise Exception("not retrieved ")
-
-        # if response.status_code == "200":
-        #     print("URL retrieved GOOD")
-        # else:
-        #     print(response.status_code)
+            logger.error("Response from {} is not correct: {}.".format(url, response.status_code))
+        logger.debug("Response from {} is obtained correctly.".format(url))
         return response
 
     def get_price_data(self, ticker, period1, period2=datetime.datetime.now()):
@@ -32,15 +29,16 @@ class ExtractorApi:
         :return: DataFrame of prices over time, None if the query was not correct
         """
         if not isinstance(period1, datetime.datetime):
-            print("The start date is not a datetime.datetime type")
+            logger.error(("The start date is not a datetime.datetime type: {}".format(period1)))
             return
 
         if not isinstance(period2, datetime.datetime):
-            print("The end date is not a datetime.datetime type")
+            logger.error(("The start date is not a datetime.datetime type: {}".format(period2)))
             return
 
         if (period2 - period1).total_seconds() < 0:
             print("The start date is later than the end day!")
+            logger.error(("The start date is later than the end day: {} and {}".format(period1, period2)))
             return
 
         period1 = str(int(period1.timestamp()))  # UNIX timestamp representation of the date you wish to start at
@@ -57,12 +55,5 @@ class ExtractorApi:
         time_lst = pd.to_datetime(time_lst, unit='s')
         data_lst = dict_content['chart']['result'][0]['indicators']['quote'][0]
         df_table = pd.DataFrame(data=data_lst, index=time_lst)
+        logger.debug("The price data is retrieved.")
         return df_table
-
-
-# ticker = "bmw.de"
-#
-# api_obj = ExtractorApi()
-# df_table = api_obj.get_price_data(ticker=ticker,
-#                                   period1=datetime.datetime(2022, 1, 1),
-#                                   period2=datetime.datetime(2022, 1, 7))
