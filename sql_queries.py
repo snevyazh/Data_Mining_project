@@ -2,6 +2,7 @@
 # PASSWORD = 'barmaglot'
 
 DATABASE_TO_USE = 'use yahoo;'
+DATABASE = 'yahoo'
 DB_CREATE = """create database if not exists yahoo;"""
 DB_CREATE_TABLE_TICKERS = """CREATE TABLE IF NOT EXISTS tickers (
           ID INT NOT NULL AUTO_INCREMENT,
@@ -46,7 +47,7 @@ DB_CREATE_TABLE_PRICE = """
           ID INT NOT NULL AUTO_INCREMENT,
           close_price INT NULL,
           price_date DATETIME NULL,
-          ticker_id VARCHAR(45) NULL,
+          ticker_id INT,
           PRIMARY KEY (ID),
             FOREIGN KEY (ticker_id)
             REFERENCES tickers(ID)
@@ -111,6 +112,8 @@ DB_FIND_TICKER = "select ID from tickers where ticker_name = '{ticker}';"
 DB_FIND_AUTHOR = "select ID from authors where name = '{author}';"
 
 CHECK_DUPLICATE = "select ID from news where ticker_id = (select ID from ticker where ticker_name = {}) and url = {};"
+
+CHECK_DUPLICATE_PRICE = "select ID from price where date = {} and close_price = {};"
 
 DROP_TEMP_TABLE = 'DROP TABLE temp_table;'
 
