@@ -4,7 +4,7 @@ from extractor_api import *
 
 
 class Scraper:
-    def __init__(self, ticker, max_cards, api=False, date_start=None, date_end=None):
+    def __init__(self, ticker, max_cards):
         """
         Defines the class Scrapper
         :param ticker: (str) ticker of company. e.g. "BMW.DE"
@@ -15,9 +15,6 @@ class Scraper:
         self.max_cards = max_cards
         self.news_data_lst = []
         self.scraper_by_ticker_from_yahoo()
-
-        if api:
-            self.price_table = self.get_price_table(date_start, date_end)
         pass
 
     def get_price_table(self, date_start, date_end):
