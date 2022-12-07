@@ -109,6 +109,8 @@ DB_FIND_PRICE = "select close_price, price_date from price where ticker_id = '{}
 
 DB_FIND_TICKER = "select ID from tickers where ticker_name = '{ticker}';"
 
+DB_FIND_NEWS = "select news_id from news_ticker where ticker_id = '{ticker_id}';"
+
 DB_FIND_AUTHOR = "select ID from authors where name = '{author}';"
 
 CHECK_DUPLICATE = "select ID from news where ticker_id = (select ID from ticker where ticker_name = {}) and url = {};"

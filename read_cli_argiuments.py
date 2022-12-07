@@ -22,6 +22,7 @@ def get_command_line_params():
                         help='Up to which date to parse, format year-month-day')
 
     args = parser.parse_args()
+
     if not str(args.number_of_news).isalpha:
         raise ValueError("The number of news articles to show entered in command line is not a number")
     input_parameters = {

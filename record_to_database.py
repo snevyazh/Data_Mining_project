@@ -2,6 +2,7 @@ import pymysql
 from sql_queries import *
 import pandas as pd
 from sqlalchemy import create_engine
+import matplotlib.pyplot as plt
 
 
 class DatabaseRecord:
@@ -20,12 +21,13 @@ class DatabaseRecord:
         self.date_to = date_to
         self.date_from = date_from
         self.api = api
+        self.db_data = 'mysql+pymysql://' + self.user + ':' + self.password + '@' + 'localhost/' + DATABASE
+        self.engine = create_engine(self.db_data)
 
     def __create_connection_to_mysql(self):
         """
         Creates connection to MySQL database management system
-        :param user: (str) user name
-        :param password: (str)
+        :param: none, takes (str) user name
         :return: <pymysql.connections.Connection object>
         """
         self.connection = pymysql.connect(host='localhost',
@@ -135,6 +137,16 @@ class DatabaseRecord:
         return result[0]['ID']
         # 0 is index for result list, used locally and will never change
 
+    def __get_news_id(self, ticker_id):
+        """gets from DB the news ID based on given ticker and returns the ticker ID
+        :param ticker: ticker entered by user
+        :return: ID of the news in the database in form of list of dictionaries [{'news_id': 1}, {'news_id': 2}]"""
+        self.run_sql(DATABASE_TO_USE)
+        result = self.run_sql(DB_FIND_NEWS.format(ticker_id=ticker_id), return_result=True)
+        print('result', result)
+        return result
+        # 0 is index for result list, used locally and will never change
+
     def __get_author_id(self, author):
         """gets from DB the author ID based on given author name and returns the author ID
         :param author: name of the author from news
@@ -200,20 +212,13 @@ class DatabaseRecord:
         """
         Records the queried prices from API into the database "yahoo"
         :param ticker: (str) ticker from input
-        :param date: (datetime) date for price identification
-        :param close_price: (int) the price for the date given
+        :param price_table: (dataframe) dataframe of date-price for selected ticker
         :return: none
         """
-        db_data = 'mysql+pymysql://' + self.user + ':' + self.password + '@' + 'localhost/' + DATABASE
-        engine = create_engine(db_data)
-        # self.run_sql(DATABASE_TO_USE)
         ticker_id = self.__get_ticker_id(ticker)
         df_to_sql = pd.DataFrame({'price_date': price_table.index, 'close_price': price_table['close'],
                                   'ticker_id': ticker_id})
-        df_to_sql.to_sql('price', con=engine, if_exists='append', index=False)
-        # sql_query = self.__get_sql_query_to_insert_price(ticker_id, close_price, date)
-        # self.run_sql(sql_query)
-        # self.connection.commit()
+        df_to_sql.to_sql('price', con=self.engine, if_exists='append', index=False)
 
     def __create_database(self):
         """creates the database with desired tables to store news
@@ -226,4 +231,56 @@ class DatabaseRecord:
         self.run_sql(DB_CREATE_TABLE_NEWS)
         self.run_sql(DB_CREATE_TABLE_NEWS_TICKERS)
         self.run_sql(DB_CREATE_TABLE_PRICE)
+
+    def draw_graph(self, date_start, date_end):
+        """draws the fraph of the database: price graph and news graphs
+        :param: none
+        :return: none"""
+        ticker_id = self.__get_ticker_id(self.ticker)
+        news_id = pd.DataFrame(self.__get_news_id(ticker_id))
+        df_price = pd.read_sql('price', con=self.engine, index_col=None)
+        df_price = df_price[df_price['ticker_id'] == ticker_id]
+        df_price = df_price[df_price['price_date'] <= date_end]
+        df_price = df_price[df_price['price_date'] >= date_start]
+        df_news = pd.read_sql('news', con=self.engine, index_col=None)
+        df_news_sorted = pd.concat([news_id, df_news], join="inner", ignore_index=True)
+        df_news_sorted = df_news_sorted[df_news['news_date'] <= date_end]
+        df_news_sorted = df_news_sorted[df_news['news_date'] >= date_start]
+
+        f, ax = plt.subplots()
+        ax.plot('price_date', 'close_price', data=df_price, c='salmon')
+        dates = df_news_sorted['news_date']
+        print(dates)
+        for date in df_news_sorted['news_date']:
+            ax.plot([date, date], [0, 10], color='purple', linestyle='--', linewidth=2, alpha=0.5)
+        ax.set(title='Price over time',
+               xlabel='Date',
+               ylabel='Purchasing power parity')
+        ax.legend(loc=(1.1, 0.6))
+        plt.show()
+
+
+    # ax.annotate(
+    #     'authoritarian regimes,\nare poorer \nboth GDP-wise and\nability to buy',
+    #     xy=(4000., 1.3), xycoords='data',
+    #     xytext=(210, 150), textcoords='offset points',
+    #     bbox=dict(boxstyle="round", fc="0.8"),
+    #     arrowprops=dict(arrowstyle="->",
+    #                     connectionstyle="arc3,rad=.3"))
+    # ax.annotate(
+    #     'And this one',
+    #     xy=(130000., 2.3), xycoords='data',
+    #     xytext=(50, 0), textcoords='offset points',
+    #     bbox=dict(boxstyle="round", fc="0.9"),
+    #     arrowprops=dict(arrowstyle="->",
+    #                     connectionstyle="arc3,rad=.2"))
+    #
+    # ax.annotate(
+    #     'However, there\nare some exclusions,\nlike this one',
+    #     xy=(55000, 7.5), xycoords='data',
+    #     xytext=(200, -70), textcoords='offset points',
+    #     bbox=dict(boxstyle="round", fc="0.9"),
+    #     arrowprops=dict(arrowstyle="->",
+    #                     connectionstyle="arc3,rad=.1"))
+    plt.show()
 
