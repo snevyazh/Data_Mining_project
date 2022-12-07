@@ -16,9 +16,11 @@ def main():
                               date_to=input_parameters['date_to'], api=input_parameters['api'])
     scrapper_object = Scraper(ticker=input_parameters["ticker"], max_cards=input_parameters["number_of_news"])
     if input_parameters['api']:
-
+        price_table = scrapper_object.get_price_table(date_start=input_parameters['date_from'],
+                                                      date_end=input_parameters['date_to'])
     news_data_lst = scrapper_object.news_data_lst
     database.record_to_database(input_parameters["ticker"], news_data_lst)
+    database.record_price_to_database(ticker=input_parameters['ticker'], price_table=price_table)
 
 
 if __name__ == "__main__":

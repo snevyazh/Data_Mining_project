@@ -1,5 +1,6 @@
 import pymysql
 from sql_queries import *
+import pandas as pd
 
 
 class DatabaseRecord:
@@ -54,6 +55,17 @@ class DatabaseRecord:
         :return: True is duplicate found and False if not
         """
         if self.run_sql(CHECK_DUPLICATE.format(ticker, url)):
+            return True
+        else:
+            return False
+
+    def check_duplicate_price(self, date, close_price):
+        """Checks if the price is in the DB
+        :param date: (datetime) date of the price record
+        :param close_price: close price for the given date
+        :return: True is duplicate found and False if not
+        """
+        if self.run_sql(CHECK_DUPLICATE.format(date, close_price)):
             return True
         else:
             return False
@@ -183,18 +195,22 @@ class DatabaseRecord:
         self.connection.commit()
         return
 
-    def record_price_to_database(self, ticker_id, close_price, date):
+    def record_price_to_database(self, ticker, price_table):
         """
         Records the queried prices from API into the database "yahoo"
-        :param ticker_id: (int) ticker ID from tickers
+        :param ticker: (str) ticker from input
         :param date: (datetime) date for price identification
         :param close_price: (int) the price for the date given
         :return: none
         """
         self.run_sql(DATABASE_TO_USE)
-        sql_query = self.__get_sql_query_to_insert_price(ticker_id, close_price, date)
-        self.run_sql(sql_query)
-        self.connection.commit()
+        ticker_id = self.__get_ticker_id(ticker)
+        df_to_sql = pd.DataFrame({'Date': price_table.index, 'close_price': price_table['close'],
+                                  'ticker_id': ticker_id})
+        df_to_sql.to_sql('price', con=self.connection, schema=DATABASE_TO_USE, if_exists='append')
+        # sql_query = self.__get_sql_query_to_insert_price(ticker_id, close_price, date)
+        # self.run_sql(sql_query)
+        # self.connection.commit()
 
     def __create_database(self):
         """creates the database with desired tables to store news

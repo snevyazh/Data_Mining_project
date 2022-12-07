@@ -112,6 +112,8 @@ DB_FIND_AUTHOR = "select ID from authors where name = '{author}';"
 
 CHECK_DUPLICATE = "select ID from news where ticker_id = (select ID from ticker where ticker_name = {}) and url = {};"
 
+CHECK_DUPLICATE_PRICE = "select ID from price where date = {} and close_price = {};"
+
 DROP_TEMP_TABLE = 'DROP TABLE temp_table;'
 
 SELECT_NEWS_DATA = "select ID from news where url = '{news_data}';"
