@@ -19,8 +19,11 @@ class Parser:
         self.text = self.__function_text(self.soup)
 
     def __url_retrieve(self, url):
-        """creates the response from given URL of a news article and returns it"""
-
+        """
+        creates the response from given URL of a news article and returns it
+        :param url: (str) url for request
+        :return: response class
+        """
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
                           'Chrome/102.0.0.0 Safari/537.36'}
@@ -42,7 +45,6 @@ class Parser:
         # print(str(author[0]).rstrip('</span>').lstrip('<span class="caas-author-byline-collapse">'))
         return str(author[0]).rstrip('</span>').lstrip('<span class="caas-author-byline-collapse">')
         # 0 is an index for web scrapping of author, will never change and is used only locally
-
 
     def __function_datetime(self, soup):
         """takes the date and time from the article based on soup object"""

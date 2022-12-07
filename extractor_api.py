@@ -6,11 +6,16 @@ from logger import logger
 
 
 class ExtractorApi:
+    """Class ExtractorApi() retrieves stock price data from finance.yahoo.com"""
     def __init__(self):
         return
 
     def url_retrieve(self, url):
-        """creates the response from given URL of a news article and returns it"""
+        """
+        creates the response from given URL of a news article and returns it
+        :param url: (str) url for request
+        :return: response class
+        """
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
                           'Chrome/102.0.0.0 Safari/537.36'}

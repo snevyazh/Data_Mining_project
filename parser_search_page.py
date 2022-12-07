@@ -26,10 +26,10 @@ class ParserSearchPage:
 
     def _scroll_to_bottom(self):
         """
-             Scrolls the web page to its bottom, overcoming the dynamic pagination.
-             no params on input, only self
-             no return, it only scrolls.
-             """
+         Scrolls the web page to its bottom, overcoming the dynamic pagination.
+         no params on input, only self
+         no return, it only scrolls.
+        """
         old_position = 0
         new_position = None
 

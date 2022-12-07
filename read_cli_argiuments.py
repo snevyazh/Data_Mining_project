@@ -3,13 +3,14 @@ import datetime
 
 
 def get_command_line_params():
-    """Reads the command line interface and returns the CLI arguments: print with URL (default yes),
+    """
+    Reads the command line interface and returns the CLI arguments: print with URL (default yes),
     username , password, number of news to show and ticker symbol.
     Raises ValueError exception if number of news is not a number
     :param: none
     :return: list of input parameters in form of a list: username, password to DB, ticker name, dates FROM which to
     parse data and UP TIL which date
-        """
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument('-a', action='store_true', help="if selected API won't be queried")
     parser.add_argument('username', type=str, help='username')
@@ -34,5 +35,3 @@ def get_command_line_params():
         "date_to": args.date_to[0],
     }
     return input_parameters
-
-# print(get_command_line_params())
