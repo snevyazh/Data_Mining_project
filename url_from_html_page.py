@@ -9,7 +9,10 @@ def get_url_from_tag_h3(tag_h3):
 
 
 def get_url_lst(tag_h3_lst):
-    """Get list of url to news from the tag <h3 id='Mb(5px)'>"""
+    """Get list of url to news from the tag <h3 id='Mb(5px)'>
+    :param tag_h3_lst: list of h3 tags with urls inside
+    :return: list of urls to news pages
+    """
     url_lst = []
     for tag_h3 in tag_h3_lst:
         url = get_url_from_tag_h3(tag_h3)

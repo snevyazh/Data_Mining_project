@@ -40,6 +40,19 @@ DB_CREATE_TABLE_NEWS_TICKERS = """CREATE TABLE IF NOT EXISTS news_ticker (
             )
             ; """
 
+DB_CREATE_TABLE_PRICE = """
+        CREATE TABLE IF NOT EXISTS price
+        (
+          ID INT NOT NULL AUTO_INCREMENT,
+          close_price INT NULL,
+          price_date DATETIME NULL,
+          ticker_id VARCHAR(45) NULL,
+          PRIMARY KEY (ID),
+            FOREIGN KEY (ticker_id)
+            REFERENCES tickers(ID)
+        )
+        ;"""
+
 DB_FIND_TICKER_URL = """select ID from news where ticker_id = (select ID from ticker where ticker_name = {ticker}) "
                "and url = {url};"""
 
@@ -81,6 +94,17 @@ DB_INSERT_NEWS_TICKER = """
                     AND news_ticker.news_id = temp_table.news_id
                 );
                 """
+DB_INSERT_PRICE = """           
+                INSERT INTO price
+                (close_price, price_date, ticker_id) 
+                VALUES ({price}, {price_date} , {ticker_id})
+                ;
+                """
+
+CHECK_PRICE_DUPLICATE = "select ticker_id from price " \
+                        "where ticker_id = (select ID from ticker where ticker_id = {}) and price_date = {};"
+
+DB_FIND_PRICE = "select close_price, price_date from price where ticker_id = '{}';"
 
 DB_FIND_TICKER = "select ID from tickers where ticker_name = '{ticker}';"
 

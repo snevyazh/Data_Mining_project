@@ -18,11 +18,17 @@ class ParserSearchPage:
     def _get_url(self):
         """
         Gets url from query (ticker of company (str). e.g. "BMW.DE").
-        :return: url (str)
+        :params: none, only self
+        :return: full url of the search with ticker
         """
         return "https://finance.yahoo.com/quote/" + self.ticker + "/news?p=" + self.ticker
 
     def _scroll_to_bottom(self):
+        """
+             Scrolls the web page to its bottom, overcoming the dynamic pagination.
+             no params on input, only self
+             no return, it only scrolls.
+             """
         old_position = 0
         new_position = None
         while new_position != old_position:
@@ -47,10 +53,10 @@ class ParserSearchPage:
     def _get_html_page(self):
         """
         Returns content of html page (search page for the ticker of company (str). e.g. "BMW.DE")
+        :params: no, only self
         :return: text (str), content in tag <html></html>
         """
         url_root_yahoo = self._get_url()
-
         self._driver.get(url_root_yahoo)
         self._scroll_to_bottom()
         text = self._driver.page_source
@@ -58,13 +64,21 @@ class ParserSearchPage:
         return text
 
     def _get_url_from_tag_h3(self, tag_h3):
-        """Gets url to news from tag <h3 id='Mb(5px)'>"""
+        """
+        Gets url from html tag h3
+        :param tag_h3:  h3 tag
+        :return: full url to the news page
+        """
         URL_PREFIX = "https://finance.yahoo.com"
         url_to_news = URL_PREFIX + tag_h3.find("a").get("href")
         return url_to_news
 
     def get_url_lst(self, tag_h3_lst):
-        """Get list of url to news from the tag <h3 id='Mb(5px)'>"""
+        """
+        Returns list of urls in for of python list
+        :param tag_h3_lst: list of h3 tags from the web page
+        :return: list of urls
+        """
         url_lst = []
         for tag_h3 in tag_h3_lst:
             url = self._get_url_from_tag_h3(tag_h3)
@@ -73,8 +87,9 @@ class ParserSearchPage:
 
     def _get_tag_h3_lst_from_html_page(self):
         """
-        Gets list of tags <h3 id='Mb(5px)'> from the html page (Content between <html></html>)
-        :return: list_of_tags (list): each tag contains the link to news
+        Returns list h3 tags from html page, the list contains the h3 tags with url inside.
+        :param: only self
+        :return: list of tags h3 with urls inside
         """
         # Parse HTML content of the page (URL)
         soup = BeautifulSoup(self._html_page, "html.parser")
@@ -84,7 +99,10 @@ class ParserSearchPage:
 
     def get_url_lst_from_html_page(self):
         """
-        Gets list of url to news from finance yahoo
+        Accumulates the functions to get final url lists, calls functions to get list of h3 tags with
+        urls first, and then calls the function to create the list of urls.
+        :param: only self
+        :return: final list of urls
         """
         # Get list tags <h3 id='Mb(5px)'></h3>
         tag_h3_lst = self._get_tag_h3_lst_from_html_page()

@@ -6,7 +6,10 @@ class DatabaseRecord:
     """class for all SQL operations """
 
     def __init__(self, user, password, ticker):
-        """initialise clss with username, password and ticker"""
+        """initialise clss with username, password and ticker
+            :params: database user, his password and ticker, that was selected to scrape for news
+            :return: none. Only initialise the class with input parameters
+        """
         self.user = user
         self.password = password
         self.ticker = ticker
@@ -41,8 +44,12 @@ class DatabaseRecord:
         return
 
     def check_duplicate(self, url, ticker):
-        """checks if the news is in the DB already with the assumption that we can have same URL with news,
-        but for different ticker"""
+        """Checks if the news is in the DB already with the assumption that we can have same URL with news,
+        but for different ticker
+        :param ticker: (str) e.g. 'BMW.DE' to check for duplicate
+        :param url: url to the news for this ticker to check
+        :return: True is duplicate found and False if not
+        """
         if self.run_sql(CHECK_DUPLICATE.format(ticker, url)):
             return True
         else:
@@ -81,7 +88,6 @@ class DatabaseRecord:
                                  news_data["date_time"].isoformat(),
                                  news_data["text_body"], news_data["url"])) + ','
         sql_query3 = sql_query3[:-1] + ';'
-
         sql_query4 = DB_INSERT_NEWS
         sql_query5 = DROP_TEMP_TABLE
         return sql_query1, sql_query2, sql_query3, sql_query4, sql_query5
@@ -100,7 +106,6 @@ class DatabaseRecord:
             sql_query3 += ' ' \
                           + str((news_id, ticker_id)) + ','
         sql_query3 = sql_query3[:-1] + ';'
-
         sql_query4 = DB_INSERT_NEWS_TICKER
         sql_query5 = DROP_TEMP_TABLE
         return sql_query1, sql_query2, sql_query3, sql_query4, sql_query5
@@ -138,38 +143,21 @@ class DatabaseRecord:
         :param news_data_lst: list of news cards (return from scraper.scraper_by_ticker_from_yahoo())
         :return:
         """
-        # Choose to use the "yahoo" database
         self.run_sql(DATABASE_TO_USE)
-
-        # Insert the scraped values into the database (checks duplicate)
-        # SQL query for the insert into TABLE tickers
         sql_query = self.__get_sql_query_to_insert_ticker(ticker)
         self.run_sql(sql_query)
         self.connection.commit()
-        # print('news data list', news_data_lst)
-        # SQL query for the insert into TABLE authors
         for author in [x["author"] for x in news_data_lst]:
-            # print(author)
             sql_query = self.__get_sql_query_to_insert_author(author)
-            # print(sql_query)
             self.run_sql(sql_query)
             self.connection.commit()
-
-        # get author_id by author name
         for i, value in enumerate([x["author"] for x in news_data_lst]):
             index = self.__get_author_id(value)
             news_data_lst[i]["author_id"] = index
-
-        # Sql query for the insert into TABLE news
         sql_query_to_insert = self.__get_sql_query_to_insert_news(news_data_lst)
         list(map(lambda sql_query: self.run_sql(sql_query), sql_query_to_insert))
         self.connection.commit()
-
-        # Sql query for the insert into TABLE news_ticker relation
-        # Get ticker_id by ticker_name
         ticker_id = self.__get_ticker_id(ticker)
-
-        # Get news_id by url
         news_id_lst = self.__get_news_id_lst(news_data_lst)
         sql_query_to_insert = self.__get_sql_query_to_insert_news_ticker(ticker_id, news_id_lst)
         list(map(lambda sql_query: self.run_sql(sql_query), sql_query_to_insert))
@@ -178,21 +166,10 @@ class DatabaseRecord:
 
     def __create_database(self):
         """creates the database with desired tables to store news"""
-
         self.run_sql(DB_CREATE)
         self.run_sql(DATABASE_TO_USE)
-        # Creates TABLE ticker
         self.run_sql(DB_CREATE_TABLE_TICKERS)
-
         self.run_sql(DB_CREATE_TABLE_AUTHORS)
-
         self.run_sql(DB_CREATE_TABLE_NEWS)
-
         self.run_sql(DB_CREATE_TABLE_NEWS_TICKERS)
 
-# connection = create_connection_to_mysql(user='root', password='*******')
-# create_database(connection)
-# for ticker in ['BMW.DE', 'META']:
-#     # ticker = 'BMW.DE'
-#     news_data_lst = scraper.scraper_by_ticker_from_yahoo(ticker, max_cards=5)
-#     record_to_database(connection, ticker, news_data_lst)
