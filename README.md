@@ -17,7 +17,7 @@ The future release will include also graphical comparison of prices vs news base
 
 The program run on Python interpreter with a command line interface in the following way:
 
-python main.py (-a) <username> <password> <number_of_news> <ticker> (<start date> <stop date>)
+python main.py (-a) username password number_of_news ticker (start date stop date)
 
 where
 * **-a** is option to work with API and gather the prices or not. Default is False.
