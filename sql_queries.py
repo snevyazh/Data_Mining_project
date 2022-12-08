@@ -45,7 +45,7 @@ DB_CREATE_TABLE_PRICE = """
         CREATE TABLE IF NOT EXISTS price
         (
           ID INT NOT NULL AUTO_INCREMENT,
-          close_price INT NULL,
+          close_price FLOAT(6,2) NULL,
           price_date DATETIME NULL,
           ticker_id INT,
           PRIMARY KEY (ID),

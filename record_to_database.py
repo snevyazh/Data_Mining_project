@@ -254,6 +254,6 @@ class DatabaseRecord:
             ax.plot([date, date], [50, 100], color='purple', linestyle='--', linewidth=2, alpha=0.5, label='news')
         ax.set(title='Price over time',
                xlabel='Date',
-               ylabel='Purchasing power parity')
+               ylabel='Price, USD')
         ax.legend(loc=(1, 0.6))
         plt.show()
