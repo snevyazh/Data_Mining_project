@@ -234,7 +234,8 @@ class DatabaseRecord:
 
     def draw_graph(self, date_start, date_end):
         """draws the fraph of the database: price graph and news graphs
-        :param: none
+        :param date_start: start date for the graph - the price range start
+        :param date_end: stop date for the graph - the price range end
         :return: none"""
         ticker_id = self.__get_ticker_id(self.ticker)
         news_id = pd.DataFrame(self.__get_news_id(ticker_id))
@@ -243,44 +244,17 @@ class DatabaseRecord:
         df_price = df_price[df_price['price_date'] <= date_end]
         df_price = df_price[df_price['price_date'] >= date_start]
         df_news = pd.read_sql('news', con=self.engine, index_col=None)
-        df_news_sorted = pd.concat([news_id, df_news], join="inner", ignore_index=True)
-        df_news_sorted = df_news_sorted[df_news['news_date'] <= date_end]
-        df_news_sorted = df_news_sorted[df_news['news_date'] >= date_start]
 
-        f, ax = plt.subplots()
-        ax.plot('price_date', 'close_price', data=df_price, c='salmon')
-        dates = df_news_sorted['news_date']
-        print(dates)
-        for date in df_news_sorted['news_date']:
-            ax.plot([date, date], [0, 10], color='purple', linestyle='--', linewidth=2, alpha=0.5)
+        df_news = df_news[df_news['news_date'] <= date_end]
+        df_news = df_news[df_news['news_date'] >= date_start]
+
+        f, ax = plt.subplots(figsize=(16, 5))
+        ax.scatter(df_price['price_date'], df_price['close_price'], label='price')
+        for date in df_news['news_date']:
+            ax.plot([date, date], [50, 100], color='purple', linestyle='--', linewidth=2, alpha=0.5, label='news')
         ax.set(title='Price over time',
                xlabel='Date',
                ylabel='Purchasing power parity')
-        ax.legend(loc=(1.1, 0.6))
+        ax.legend(loc=(1, 0.6))
         plt.show()
-
-
-    # ax.annotate(
-    #     'authoritarian regimes,\nare poorer \nboth GDP-wise and\nability to buy',
-    #     xy=(4000., 1.3), xycoords='data',
-    #     xytext=(210, 150), textcoords='offset points',
-    #     bbox=dict(boxstyle="round", fc="0.8"),
-    #     arrowprops=dict(arrowstyle="->",
-    #                     connectionstyle="arc3,rad=.3"))
-    # ax.annotate(
-    #     'And this one',
-    #     xy=(130000., 2.3), xycoords='data',
-    #     xytext=(50, 0), textcoords='offset points',
-    #     bbox=dict(boxstyle="round", fc="0.9"),
-    #     arrowprops=dict(arrowstyle="->",
-    #                     connectionstyle="arc3,rad=.2"))
-    #
-    # ax.annotate(
-    #     'However, there\nare some exclusions,\nlike this one',
-    #     xy=(55000, 7.5), xycoords='data',
-    #     xytext=(200, -70), textcoords='offset points',
-    #     bbox=dict(boxstyle="round", fc="0.9"),
-    #     arrowprops=dict(arrowstyle="->",
-    #                     connectionstyle="arc3,rad=.1"))
-    plt.show()
 

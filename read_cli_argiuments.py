@@ -20,6 +20,10 @@ def check_date(input_param):
 
 
 def check_dates_range(date1, date2):
+    if date1 is None:
+        return
+    if date2 is None:
+        return
     if (date2 - date1).total_seconds() < 0:
         logger.error(("The start date is later than the end day: {} and {}".format(date1, date2)))
         sys.exit()
@@ -40,15 +44,15 @@ def get_command_line_params():
     parser.add_argument('password', type=str, help='password')
     parser.add_argument('number_of_news', type=check_integer, help='how many news cards to export')
     parser.add_argument('ticker', type=str, help='what ticker you need')
-    parser.add_argument('date_from', nargs='*', type=check_date,
+    parser.add_argument('date_from', nargs='?', type=check_date,
                         help='Date from which to parse, format year-month-day')
-    parser.add_argument('date_to', nargs=1, type=check_date,
+    parser.add_argument('date_to', nargs='?', type=check_date,
                         help='Up to which date to parse, format year-month-day')
     args = parser.parse_args()
     logger.debug("User input {}".format(args))
-    check_dates_range(args.date_from[0], args.date_to[0])
+    check_dates_range(args.date_from, args.date_to)
     input_parameters = {"api": args.a, "username": args.username, "password": args.password,
-                        "number_of_news": args.number_of_news, "ticker": args.ticker, "date_from": args.date_from[0],
-                        "date_to": args.date_to[0]}
+                        "number_of_news": args.number_of_news, "ticker": args.ticker, "date_from": args.date_from,
+                        "date_to": args.date_to}
     logger.debug("User input is parsed {}".format(input_parameters))
     return input_parameters
