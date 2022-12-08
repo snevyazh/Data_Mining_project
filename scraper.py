@@ -3,6 +3,7 @@ from parser_search_page import *
 from extractor_api import *
 from logger import logger
 
+
 class Scraper:
     def __init__(self, ticker, max_cards):
         """

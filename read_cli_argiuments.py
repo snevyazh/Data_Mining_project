@@ -8,6 +8,8 @@ def check_integer(input_param):
     if not str(input_param).isdigit():
         logger.error("The number of news articles to show entered in command line is not a number")
         sys.exit()
+    else:
+        return int(input_param)
 
 
 def check_date(input_param):

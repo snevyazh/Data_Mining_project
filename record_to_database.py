@@ -139,7 +139,7 @@ class DatabaseRecord:
 
     def __get_news_id(self, ticker_id):
         """gets from DB the news ID based on given ticker and returns the ticker ID
-        :param ticker: ticker entered by user
+        :param ticker_id: ticker_id for ticker entered by user
         :return: ID of the news in the database in form of list of dictionaries [{'news_id': 1}, {'news_id': 2}]"""
         self.run_sql(DATABASE_TO_USE)
         result = self.run_sql(DB_FIND_NEWS.format(ticker_id=ticker_id), return_result=True)
@@ -257,4 +257,3 @@ class DatabaseRecord:
                ylabel='Purchasing power parity')
         ax.legend(loc=(1, 0.6))
         plt.show()
-
