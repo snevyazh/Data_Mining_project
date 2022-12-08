@@ -26,25 +26,33 @@ class ExtractorApi:
         logger.debug("Response from {} is obtained correctly.".format(url))
         return response
 
+    def _check_date_input(self, period1, period2):
+        """
+        Checks if the input dates are in hte correct format
+        :param period1: (datetime.datetime) time to start at
+        :param period2: (datetime.datetime) time to end at (the current day by default)
+        :return: (boolean) True if the test passed, False otherwise
+        """
+        if not isinstance(period1, datetime.datetime):
+            logger.error(("The start date is not a datetime.datetime type: {}".format(period1)))
+            return False
+        if not isinstance(period2, datetime.datetime):
+            logger.error(("The start date is not a datetime.datetime type: {}".format(period2)))
+            return False
+        if (period2 - period1).total_seconds() < 0:
+            logger.error(("The start date is later than the end day: {} and {}".format(period1, period2)))
+            return False
+        return True
+
     def get_price_data(self, ticker, period1, period2=datetime.datetime.now()):
         """"
         Gets price data over the specified period with a resolution of 1 day
         :param ticker: (str) e.g. "bmw.de"
-        :param period1: (datetime.datetime) time to start at (can be overwritten by 'range')
+        :param period1: (datetime.datetime) time to start at
         :param period2: (datetime.datetime) time to end at (the current day by default)
         :return: DataFrame of prices over time, None if the query was not correct
         """
-        if not isinstance(period1, datetime.datetime):
-            logger.error(("The start date is not a datetime.datetime type: {}".format(period1)))
-            return
-
-        if not isinstance(period2, datetime.datetime):
-            logger.error(("The start date is not a datetime.datetime type: {}".format(period2)))
-            return
-
-        if (period2 - period1).total_seconds() < 0:
-            print("The start date is later than the end day!")
-            logger.error(("The start date is later than the end day: {} and {}".format(period1, period2)))
+        if not self._check_date_input(period1, period2):
             return
 
         period1 = str(int(period1.timestamp()))  # UNIX timestamp representation of the date you wish to start at
