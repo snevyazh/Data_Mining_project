@@ -8,9 +8,9 @@ The code runs with CLI parameters with the syntax described below.
 User selects the number of news to scrape, the ticker and optionally: dates to gather prices from date...to date.
 The code goes to finance.yahoo.com, searches for news for the given ticker, visits all the individual news pages and scrapes the data:
 author, date, text of the news.
-All scraped data is written to database (see below DB description).
+All scraped data are written to database (see below DB description).
 If user chooses to gather price data, the code uses API to finance.yahoo.com and collects all the data for the dates' range provided.
-Price data is also written to the database.
+Price data are also written to the database.
 The future release will include also graphical comparison of prices vs news based on dates of both.
 
 ## Command line interface
