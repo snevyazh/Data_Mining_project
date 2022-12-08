@@ -46,6 +46,7 @@ class Scraper:
 
         i = 1  # news number
         for url in url_lst:
+            logger.debug("process page #{} out of {}".format(i, self.max_cards))
             print(f"process page #{i} out of {self.max_cards}")
             parser_for_news_card = parser.Parser(url)
             self.news_data_lst.append(parser_for_news_card.get_news_data(url))
