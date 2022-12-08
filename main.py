@@ -21,7 +21,6 @@ def main():
         price_table = scrapper_object.get_price_table(date_start=input_parameters['date_from'],
                                                       date_end=input_parameters['date_to'])
         database.record_price_to_database(ticker=input_parameters['ticker'], price_table=price_table)
-    #database.draw_graph(date_start=input_parameters['date_from'], date_end=input_parameters['date_to'])
 
 
 if __name__ == "__main__":
