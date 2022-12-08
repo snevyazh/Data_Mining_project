@@ -10,7 +10,6 @@ class Scraper:
         Defines the class Scrapper
         :param ticker: (str) ticker of company. e.g. "BMW.DE"
         :param max_cards: (int) maximum number of cards
-        :param api: (boolean) retrieve the stock prices through API if True
         """
         self.ticker = ticker
         self.max_cards = max_cards
