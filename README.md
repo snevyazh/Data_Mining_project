@@ -1,18 +1,39 @@
 
 # Finance.yahoo.com webscrapper
 
-This is a code to scrap the news from finance.yahoo.com
+This is a code to scrap the news and prices from finance.yahoo.com for given ticker
 
-# Milestone 2.
+## Code operation
+The code runs with CLI parameters with the syntax described below.
+User selects the number of news to scrape, the ticker and optionally: dates to gather prices from date...to date.
+The code goes to finance.yahoo.com, searches for news for the given ticker, visits all the individual news pages and scrapes the data:
+author, date, text of the news.
+All scraped data is written to database (see below DB description).
+If user chooses to gather price data, the code uses API to finance.yahoo.com and collects all the data for the dates' range provided.
+Price data is also written to the database.
+The future release will include also graphical comparison of prices vs news based on dates of both.
 
-The program scrapes the news related to specified company's ticker from finance.yahoo.com and record the data to the MySQL database yahoo.
+## Command line interface
+
+The program run on Python interpreter with a command line interface in the following way:
+
+python main.py (-a) <username> <password> <number_of_news> <ticker> (<start date> <stop date>)
+
+where
+* **-a** is option to work with API and gather the prices or not. Default is False.
+* **username** is username for the MySQL database management system
+* **password** is password for the MySQL database management system
+* **number_of_news** is maximal number of news pages scraped for the specified company
+* **ticker** is ticker name of the company (e.g. 'BMW.DE')
+* **start date** , **stop date** define the range of dates to gather price data for the ticker
+
 
 ## Database description
 
 The database yahoo consists of 4 tables.
 
 Table news:
-* id: id number of the news article
+* ID: id number of the news article
 * title: title of the news article
 * author_id: id number of the article's author (see Table authors)
 * news_date: datetime of the article's release
@@ -20,31 +41,58 @@ Table news:
 * url: url to the article
 
 Table authors:
-* id: id number of the author
+* ID: id number of the author
 * name: full name of the author
 
 Table tickers:
-* id: id number of the ticker
+* ID: id number of the ticker
 * ticker_name: company ticker label, e.g. 'BMW.DE'
 
-Table news_ticker
-* id: id number of the relation news-ticker
+Table news_ticker:
+* ID: id number of the relation news-ticker
 * news_id: id number of the news article (see Table news)
 * ticker_id: id number of ticker (see Table tickers)
 
+Table price:
+* ID: id number of the price entry
+* price_date: date for the price entry
+* close_price: the closure price for the ticker
+* ticker_id: foreign key to ticker table, the ID of the ticker
 
-## Command line interface
 
-The program run on Python interpretator with a command line interface in the following way:
+## Tests
+The code was tested vs. wrong tickers and mixture of wrong and correct ones. 
+The code was tested vs wrong data types on input.
+The code was tested vs start date greater than end date.
+The code incorporates errors handling and exceptions catching to prevent it from failure in case of minor errors.
+Code incorporates logging, where errors are printed to the screen and info and debug information to the file.
 
-python main.py <username>, <password>, <number_of_news>, <ticker>
 
-where
-* <username> is user name for the MySQL database management system
-* <password> is password for the MySQL database management system
-* <number_of_news> is maximal number of news pages scraped for the specified company
-* <ticker> is ticker name of the company (e.g. 'BMW.DE')
 
+## Authors
+
+- [@kuzmatsukanov] (https://github.com/kuzmatsukanov)
+- [@snevyazh] (https://github.com/snevyazh/)
+
+
+## API Reference 
+
+#### Get all items for given ticker and dates
+
+```http
+  https://query1.finance.yahoo.com/v8/finance/chart/{ticker}?&interval=1d&period1={start date}&period2={end date}
+```
+
+| Parameter  | Type       | Description                                                                 |
+|:-----------|:-----------|:----------------------------------------------------------------------------|
+| `ticker`   | `string`   | **Required**. ticker to search the prices for                               |
+| `period1`  | `datetime` | **Required**. start date                                                    |
+| `period2`  | `datetime` | **Required**. end date                                                      |
+| `interval` | `int`      | **set by default to 1 day**. Hardcoded. We get prices with  day granularity |
+
+
+
+## Appendix. Information about study assignments
 
 # Milestone 1.
 
@@ -65,45 +113,13 @@ for every article.
 6) In the future we plan to add API to enrich ticker data with finance info
 about the company the ticker represents.
 
+# Milestone 2.
 
-## Tests
-the code was tested vs. wrong tickers and mixture of wrong and correct ones. 
-the code is not failing, just no info received
+1) The program scrapes the news related to specified company's ticker from finance.yahoo.com 
+and records the data to the MySQL database yahoo.
 
-
-## Authors
-
-- [@kuzmatsukanov] (https://github.com/kuzmatsukanov)
-- [@snevyazh] (https://github.com/snevyazh/)
+# Milestone 3.
+1) The program uses API calls to finance.yahoo.com to gather price data and writes it to the database.
 
 
-## API Reference for future use in the project
 
-#### Get all items
-
-```http
-  GET /api/items
-```
-
-| Parameter | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `api_key` | `string` | **Required**. Your API key |
-
-#### Get item
-
-```http
-  GET /api/items/${id}
-```
-
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `id`      | `string` | **Required**. Id of item to fetch |
-
-#### add(num1, num2)
-
-Takes two numbers and returns the sum.
-
-
-## Appendix
-
-Any additional information goes here
