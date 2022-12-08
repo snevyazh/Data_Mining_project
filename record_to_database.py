@@ -238,7 +238,6 @@ class DatabaseRecord:
         :param date_end: stop date for the graph - the price range end
         :return: none"""
         ticker_id = self.__get_ticker_id(self.ticker)
-        news_id = pd.DataFrame(self.__get_news_id(ticker_id))
         df_price = pd.read_sql('price', con=self.engine, index_col=None)
         df_price = df_price[df_price['ticker_id'] == ticker_id]
         df_price = df_price[df_price['price_date'] <= date_end]
