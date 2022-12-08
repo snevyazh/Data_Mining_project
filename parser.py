@@ -20,7 +20,7 @@ class Parser:
 
     def __url_retrieve(self, url):
         """
-        creates the response from given URL of a news article and returns it
+        Creates the response from given URL of a news article and returns it
         :param url: (str) url for request
         :return: response class
         """
@@ -35,19 +35,30 @@ class Parser:
         return response
 
     def __create_soup(self, response):
-        """creates soup object from news page retrieved to response, and writes it to .html file on disk"""
+        """
+        Creates soup object from news page retrieved to response, and writes it to .html file on disk
+        :param response: response object
+        :return: soup object
+        """
         soup = BeautifulSoup(response.content, "html.parser")
         return soup
 
     def __function_author(self, soup):
-        """takes the author from the article based on soup object"""
+        """
+        Takes the author from the article based on soup object
+        :param soup object
+        :return: (str) author name
+        """
         author = soup.find_all(class_="caas-author-byline-collapse")
-        # print(str(author[0]).rstrip('</span>').lstrip('<span class="caas-author-byline-collapse">'))
         return str(author[0]).rstrip('</span>').lstrip('<span class="caas-author-byline-collapse">')
         # 0 is an index for web scrapping of author, will never change and is used only locally
 
     def __function_datetime(self, soup):
-        """takes the date and time from the article based on soup object"""
+        """
+        Takes the date and time from the article based on soup object
+        :param soup object
+        :return: (datetime.datetime) date of the news release
+        """
         date_time = soup.find_all(class_="caas-attr-meta-time")
         date_time_cleaned1 = str(date_time[0]).rstrip('</time>').lstrip('<time class="caas-attr-meta-time" datetime="')
         # 0 is an index for web scrapping, will never change and is used only locally
@@ -57,7 +68,11 @@ class Parser:
         return date_time_cleaned
 
     def __function_title(self, soup):
-        """takes the title of the news article based on soup aoject"""
+        """
+        Takes the title of the news article based on soup abject
+        :param soup object
+        :return: (str) title of news
+        """
         title_raw = soup.find_all(class_="caas-title-wrapper")
         # print(title_raw)
         title = str(title_raw[0]).lstrip('<header class="caas-title-wrapper"><h1 data-test-locator="headline">') \
@@ -68,7 +83,11 @@ class Parser:
         return title_clean
 
     def __function_text(self, soup):
-        """takes the news text body from the article based on soup object"""
+        """
+        Takes the news text body from the article based on soup object
+        :param soup object
+        :return: (str) text content of the news
+        """
         text_body_raw = soup.find_all(class_="caas-body")
         text_body = text_body_raw[0].text.strip()
         # 0 is an index for web scrapping, will never change and is used only locally
