@@ -1,4 +1,4 @@
-import read_cli_argiuments
+from read_cli_argiuments import CommandLineReader
 from record_to_database import *
 from scraper import *
 
@@ -10,7 +10,7 @@ def main():
         :params: none
         :return: none
         """
-    input_parameters = read_cli_argiuments.get_command_line_params()
+    input_parameters = CommandLineReader().get_command_line_params()
     database = DatabaseRecord(user=input_parameters["username"], password=input_parameters["password"],
                               ticker=input_parameters["ticker"], date_from=input_parameters["date_from"],
                               date_to=input_parameters['date_to'], api=input_parameters['api'])
@@ -21,7 +21,7 @@ def main():
         price_table = scrapper_object.get_price_table(date_start=input_parameters['date_from'],
                                                       date_end=input_parameters['date_to'])
         database.record_price_to_database(ticker=input_parameters['ticker'], price_table=price_table)
-    database.draw_graph(date_start=input_parameters['date_from'], date_end=input_parameters['date_to'])
+    #database.draw_graph(date_start=input_parameters['date_from'], date_end=input_parameters['date_to'])
 
 
 if __name__ == "__main__":
