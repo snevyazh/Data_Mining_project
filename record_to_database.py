@@ -7,11 +7,11 @@ import matplotlib.pyplot as plt
 
 class DatabaseRecord:
     """class for all SQL operations """
-
     def __init__(self, user, password, ticker, api=False, date_from=None, date_to=None):
-        """initialise clss with username, password and ticker
-            :params: database user, his password and ticker, that was selected to scrape for news
-            :return: none. Only initialise the class with input parameters
+        """
+        Initialise class with username, password and ticker
+        :params: database user, his password and ticker, that was selected to scrape for news
+        :return: none. Only initialise the class with input parameters
         """
         self.user = user
         self.password = password
@@ -51,7 +51,8 @@ class DatabaseRecord:
         return
 
     def check_duplicate(self, url, ticker):
-        """Checks if the news is in the DB already with the assumption that we can have same URL with news,
+        """
+        Checks if the news is in the DB already with the assumption that we can have same URL with news,
         but for different ticker
         :param ticker: (str) e.g. 'BMW.DE' to check for duplicate
         :param url: url to the news for this ticker to check
@@ -63,7 +64,8 @@ class DatabaseRecord:
             return False
 
     def check_duplicate_price(self, date, close_price):
-        """Checks if the price is in the DB
+        """
+        Checks if the price is in the DB
         :param date: (datetime) date of the price record
         :param close_price: close price for the given date
         :return: True is duplicate found and False if not
@@ -129,18 +131,22 @@ class DatabaseRecord:
         return sql_query1, sql_query2, sql_query3, sql_query4, sql_query5
 
     def __get_ticker_id(self, ticker):
-        """gets from DB the ticker ID based on given ticker and returns the ticker ID
+        """
+        Gets from DB the ticker ID based on given ticker and returns the ticker ID
         :param ticker: ticker entered by user
-        :return: ID of the ticker in the database"""
+        :return: ID of the ticker in the database
+        """
         self.run_sql(DATABASE_TO_USE)
         result = self.run_sql(DB_FIND_TICKER.format(ticker=ticker), return_result=True)
         return result[0]['ID']
         # 0 is index for result list, used locally and will never change
 
     def __get_news_id(self, ticker_id):
-        """gets from DB the news ID based on given ticker and returns the ticker ID
+        """
+        Gets from DB the news ID based on given ticker and returns the ticker ID
         :param ticker_id: ticker_id for ticker entered by user
-        :return: ID of the news in the database in form of list of dictionaries [{'news_id': 1}, {'news_id': 2}]"""
+        :return: ID of the news in the database in form of list of dictionaries [{'news_id': 1}, {'news_id': 2}]
+        """
         self.run_sql(DATABASE_TO_USE)
         result = self.run_sql(DB_FIND_NEWS.format(ticker_id=ticker_id), return_result=True)
         print('result', result)
@@ -148,18 +154,22 @@ class DatabaseRecord:
         # 0 is index for result list, used locally and will never change
 
     def __get_author_id(self, author):
-        """gets from DB the author ID based on given author name and returns the author ID
+        """
+        Gets from DB the author ID based on given author name and returns the author ID
         :param author: name of the author from news
-        :return: ID of the author from the database"""
+        :return: ID of the author from the database
+        """
         self.run_sql(DATABASE_TO_USE)
         result = self.run_sql(DB_FIND_AUTHOR.format(author=author), return_result=True)
         return result[0]['ID']
         # 0 is index for result list, used locally and will never change
 
     def __get_news_id_lst(self, news_data_lst):
-        """gets from DB the news_ID based on given url and returns the ticker ID
+        """
+        Gets from DB the news_ID based on given url and returns the ticker ID
         :param news_data_lst: list of news cards (return from scraper.scraper_by_ticker_from_yahoo())
-        :return: list of IDs for news from database"""
+        :return: list of IDs for news from database
+        """
         self.run_sql(DATABASE_TO_USE)
 
         news_id_lst = []
@@ -221,9 +231,11 @@ class DatabaseRecord:
         df_to_sql.to_sql('price', con=self.engine, if_exists='append', index=False)
 
     def __create_database(self):
-        """creates the database with desired tables to store news
+        """
+        Creates the database with desired tables to store news
         :param: none
-        :return: none"""
+        :return: none
+        """
         self.run_sql(DB_CREATE)
         self.run_sql(DATABASE_TO_USE)
         self.run_sql(DB_CREATE_TABLE_TICKERS)
@@ -233,10 +245,12 @@ class DatabaseRecord:
         self.run_sql(DB_CREATE_TABLE_PRICE)
 
     def draw_graph(self, date_start, date_end):
-        """draws the fraph of the database: price graph and news graphs
+        """
+        Draws the fraph of the database: price graph and news graphs
         :param date_start: start date for the graph - the price range start
         :param date_end: stop date for the graph - the price range end
-        :return: none"""
+        :return: none
+        """
         ticker_id = self.__get_ticker_id(self.ticker)
         df_price = pd.read_sql('price', con=self.engine, index_col=None)
         df_price = df_price[df_price['ticker_id'] == ticker_id]
