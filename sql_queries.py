@@ -1,9 +1,9 @@
 # USER = 'root'
 # PASSWORD = 'barmaglot'
 
-DATABASE_TO_USE = 'use yahoo;'
-DATABASE = 'yahoo'
-DB_CREATE = """create database if not exists yahoo;"""
+DATABASE_TO_USE = 'use stanislav_kuzma;'
+DATABASE = 'stanislav_kuzma'
+DB_CREATE = """create database if not exists stanislav_kuzma;"""
 DB_CREATE_TABLE_TICKERS = """CREATE TABLE IF NOT EXISTS tickers (
           ID INT NOT NULL AUTO_INCREMENT,
           ticker_name VARCHAR(45) NULL DEFAULT NULL,
@@ -35,9 +35,9 @@ DB_CREATE_TABLE_NEWS_TICKERS = """CREATE TABLE IF NOT EXISTS news_ticker (
           news_id INT,
           ticker_id INT,
             FOREIGN KEY(news_id) 
-            REFERENCES yahoo.news (ID),
+            REFERENCES news (ID),
             FOREIGN KEY(ticker_id)
-            REFERENCES yahoo.tickers (ID)
+            REFERENCES tickers (ID)
             )
             ; """
 
