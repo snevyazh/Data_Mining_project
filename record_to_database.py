@@ -22,7 +22,7 @@ class DatabaseRecord:
         self.date_from = date_from
         self.api = api
         self.db_data = 'mysql+pymysql://' + self.user + ':' \
-                       + self.password + '@' + 'data-mining-db1.cttpnp4olbpx.us-west-1.rds.amazonaws.com /' + DATABASE
+                       + self.password + '@' + 'data-mining-db1.cttpnp4olbpx.us-west-1.rds.amazonaws.com/' + DATABASE
         self.engine = create_engine(self.db_data)
 
     def __create_connection_to_mysql(self):
@@ -31,7 +31,7 @@ class DatabaseRecord:
         :param: none, takes (str) user name
         :return: <pymysql.connections.Connection object>
         """
-        self.connection = pymysql.connect(host='data-mining-db1.cttpnp4olbpx.us-west-1.rds.amazonaws.com ',
+        self.connection = pymysql.connect(host='data-mining-db1.cttpnp4olbpx.us-west-1.rds.amazonaws.com',
                                           user=self.user,
                                           password=self.password,
                                           cursorclass=pymysql.cursors.DictCursor)
